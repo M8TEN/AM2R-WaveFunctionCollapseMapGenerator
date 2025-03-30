@@ -11,9 +11,10 @@ START = (3,3) # Coordinate of the top left cell. Is (3,3) because of the AM2R Ma
 EMPTY_CELL = 15 # Index of the 'empty' tile. Tiles with this index will not be written to the final output
 MAX_DEPTH = 10 # Maximum Recursion depth for reducing possibilities in cells
 try:
-    DIMENSIONS = min(57, abs(int(input("How many tiles will there be per side? ")))) # Length of the map square to generate in in tiles. Mapping Tool can handle up to 57
+    WIDTH = min(74, abs(int(input("Enter width: "))))
+    HEIGHT = min(57, abs(int(input("Enter height: "))))
 except ValueError:
-    print("Input must be a single integer")
+    print("Inputs must be single integers")
     exit(1)
 
 # Custom Exception in case the algorithm stumbles across a tile with no option left
@@ -23,10 +24,10 @@ class OptionConflict(Exception):
 
 # Since the List of all tiles is 1 dimensional, convert from 2D coordinate to 1D list index
 def pos_to_index(pos: tuple) -> int:
-    return int(pos[0] + pos[1] * DIMENSIONS)
+    return int(pos[0] + pos[1] * WIDTH)
 
 # Locks a cell into a single option for the rest of the algorithm
-def collapse_cell(cell: Cell):
+def collapse_cell(cell: Cell) -> None:
     cell.collapsed = True
     cell.options = [cell.options[randint(0, len(cell.options)-1)]]
 
@@ -61,7 +62,7 @@ def reduce_options(grid: list, collapsed_cell: Cell, rules: list, checked_cells:
        where we reduce the options further and repeat recursively until we hit MAX_DEPTH or
        until we hit a cell that was already checked.
        If blocks make sure we don't try reducing cells outside of the grid'''
-    if middle[0] + 1 < DIMENSIONS:
+    if middle[0] + 1 < WIDTH:
         right_cell = grid[pos_to_index((middle[0]+1, middle[1]))]
         # Bind the relevant parameters to valid_options so we can use the built-in filter function
         bound = partial(valid_options, collapsed_cell, rules, 0)
@@ -82,7 +83,7 @@ def reduce_options(grid: list, collapsed_cell: Cell, rules: list, checked_cells:
         top_cell.options = list(filter(bound, top_cell.options))
         checked_cells.append(top_cell)
         reduce_options(grid, top_cell, rules, checked_cells, depth+1)
-    if middle[1] + 1 < DIMENSIONS:
+    if middle[1] + 1 < HEIGHT:
         bottom_cell = grid[pos_to_index((middle[0], middle[1]+1))]
         # Bind the relevant parameters to valid_options so we can use the built-in filter function
         bound = partial(valid_options, collapsed_cell, rules, 3)
@@ -102,7 +103,7 @@ def valid_options(reduced_cell: Cell, rules: list, direction: int, option: int) 
 def show_grid(grid: list):
     printed_cells = 0
     for c in grid:
-        if printed_cells == DIMENSIONS-1:
+        if printed_cells == WIDTH-1:
             print(f"{str(c.options):<8}", end="\n")
             printed_cells = 0
         else:
@@ -126,8 +127,8 @@ with open("Inputs/Ruleset.json", "r") as file:
 original_grid = []
 
 # Populate the grid with cells that have every option available to them
-for y in range(DIMENSIONS):
-    for x in range(DIMENSIONS):
+for y in range(HEIGHT):
+    for x in range(WIDTH):
         cell = Cell((x,y), len(all_tiles))
         original_grid.append(cell)
 
@@ -149,15 +150,15 @@ for t in range(len(all_tiles)):
         impossible_bottom.append(t)
 
 # Clear the edge tiles of impossible tiles
-for y in range(DIMENSIONS):
+for y in range(HEIGHT):
     left_cell = original_grid[pos_to_index((0, y))]
-    right_cell = original_grid[pos_to_index((DIMENSIONS-1, y))]
+    right_cell = original_grid[pos_to_index((WIDTH-1, y))]
     left_cell.options = [o for o in left_cell.options if not o in impossible_left]
     right_cell.options = [o for o in right_cell.options if not o in impossible_right]
 
-for x in range(DIMENSIONS):
+for x in range(WIDTH):
     top_cell = original_grid[pos_to_index((x, 0))]
-    bottom_cell = original_grid[pos_to_index((x, DIMENSIONS-1))]
+    bottom_cell = original_grid[pos_to_index((x, HEIGHT-1))]
     top_cell.options = [o for o in top_cell.options if not o in impossible_top]
     bottom_cell.options = [o for o in bottom_cell.options if not o in impossible_bottom]
 
@@ -174,7 +175,7 @@ for t in range(len(all_tiles)-1):
 
 # Roll a new tile until we have a valid one
 while not valid_start:
-    start_pos = (randint(0, DIMENSIONS-1), randint(0, DIMENSIONS-1))
+    start_pos = (randint(0, WIDTH-1), randint(0, HEIGHT-1))
     start_cell = grid[pos_to_index(start_pos)]
     overlap = [o for o in start_cell.options if o in possible_start_indicies]
     if len(overlap) > 0:
@@ -199,9 +200,9 @@ while not no_error:
         grid = deepcopy(setup_grid)
 
 # Choose a tile in the generated grid that will be marked as containing the boss
-boss_tile = (randint(0, DIMENSIONS-1), randint(0, DIMENSIONS-1))
+boss_tile = (randint(0, WIDTH-1), randint(0, HEIGHT-1))
 while boss_tile == start_cell.position or not grid[pos_to_index(boss_tile)].options[0] in possible_start_indicies:
-    boss_tile = (randint(0, DIMENSIONS-1), randint(0, DIMENSIONS-1))
+    boss_tile = (randint(0, WIDTH-1), randint(0, HEIGHT-1))
 
 # Compile tile data into valid JSON format for AM2R Mapping Tool
 out_tiles = []
