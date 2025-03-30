@@ -8,10 +8,10 @@ from Cell import Cell
 from GroupTiles import *
 
 START = (3,3) # Coordinate of the top left cell. Is (3,3) because of the AM2R Mapping Tool
-DIMENSIONS = 57 # Length of the map square to generate in in tiles. Mapping Tool can handle up to 57
 EMPTY_CELL = 15 # Index of the 'empty' tile. Tiles with this index will not be written to the final output
+MAX_DEPTH = 10 # Maximum Recursion depth for reducing possibilities in cells
 try:
-    MAX_DEPTH = min(57, abs(int(input("How many tiles will there be per side? ")))) # Maximum Recursion depth for reducing possibilities in cells
+    DIMENSIONS = min(57, abs(int(input("How many tiles will there be per side? ")))) # Length of the map square to generate in in tiles. Mapping Tool can handle up to 57
 except ValueError:
     print("Input must be a single integer")
     exit(1)
