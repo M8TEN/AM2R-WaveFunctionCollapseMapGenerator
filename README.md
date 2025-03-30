@@ -1,0 +1,2 @@
+# AM2R-WaveFunctionCollapseMapGenerator
+ 
