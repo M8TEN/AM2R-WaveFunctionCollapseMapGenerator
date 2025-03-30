@@ -22,16 +22,16 @@ class OptionConflict(Exception):
         super().__init__(message)
 
 # Since the List of all tiles is 1 dimensional, convert from 2D coordinate to 1D list index
-def pos_to_index(pos):
-    return pos[0] + pos[1] * DIMENSIONS
+def pos_to_index(pos: tuple) -> int:
+    return int(pos[0] + pos[1] * DIMENSIONS)
 
 # Locks a cell into a single option for the rest of the algorithm
-def collapse_cell(cell):
+def collapse_cell(cell: Cell):
     cell.collapsed = True
     cell.options = [cell.options[randint(0, len(cell.options)-1)]]
 
 # Main function containing the algorithm. Keeps going until every cell is collapsed
-def wfc(grid, rules):
+def wfc(grid: list, rules: list) -> None:
     wfc_runs = 0 # Only relevant for printing purposes
     '''Every iteration, we pull the cells from the grid that are not marked as collapsed,
        sort them and pick the one with the lowest entropy, then collapse it and propagate
@@ -53,7 +53,7 @@ def wfc(grid, rules):
     print("")
 
 # Recursive funtion to reduce the possible options for every tile
-def reduce_options(grid, collapsed_cell, rules, checked_cells, depth=0):
+def reduce_options(grid: list, collapsed_cell: Cell, rules: list, checked_cells: list, depth: int = 0) -> None:
     if depth >= MAX_DEPTH or collapsed_cell in checked_cells:
         return
     middle = collapsed_cell.position
@@ -91,7 +91,7 @@ def reduce_options(grid, collapsed_cell, rules, checked_cells, depth=0):
         reduce_options(grid, bottom_cell, rules, checked_cells, depth+1)
 
 # An option is valid if it can go next to any other possibility of the reduced cell
-def valid_options(reduced_cell, rules, direction, option):
+def valid_options(reduced_cell: Cell, rules: list, direction: int, option: int) -> bool:
     for o in reduced_cell.options:
         if not option in rules[o][direction]:
             return False
@@ -99,7 +99,7 @@ def valid_options(reduced_cell, rules, direction, option):
     return True
 
 # Debug function to print the entire grid every iteration step of wfc. Drastically diminished performance when called every iteration.
-def show_grid(grid):
+def show_grid(grid: list):
     printed_cells = 0
     for c in grid:
         if printed_cells == DIMENSIONS-1:
