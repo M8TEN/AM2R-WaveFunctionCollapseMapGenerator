@@ -5,28 +5,28 @@ def valid_connection_tile(group: list, position: tuple, tile_pos_dict: dict) -> 
     return not tile in group and tile["color"] != 3 and tile["special"] != 1
     
 
-def find_group(group: list, start: dict, checked: list, tile_pos_dict: dict) -> None:
+def find_group(group: list, start: dict, checked: list, tile_pos_dict: dict, wall_type: int = 2) -> None:
     if start in group or start in checked:
         return
 
     group.append(start)
     checked.append(start)
-    if start["wallR"] == 2:
+    if start["wallR"] == wall_type:
         new_position = (start["x"] + 1, start["y"])
         if new_position in tile_pos_dict:
-            find_group(group, tile_pos_dict[new_position], checked, tile_pos_dict)
-    if start["wallU"] == 2:
+            find_group(group, tile_pos_dict[new_position], checked, tile_pos_dict, wall_type)
+    if start["wallU"] == wall_type:
         new_position = (start["x"], start["y"] - 1)
         if new_position in tile_pos_dict:
-            find_group(group, tile_pos_dict[new_position], checked, tile_pos_dict)
-    if start["wallL"] == 2:
+            find_group(group, tile_pos_dict[new_position], checked, tile_pos_dict, wall_type)
+    if start["wallL"] == wall_type:
         new_position = (start["x"] - 1, start["y"])
         if new_position in tile_pos_dict:
-            find_group(group, tile_pos_dict[new_position], checked, tile_pos_dict)
-    if start["wallD"] == 2:
+            find_group(group, tile_pos_dict[new_position], checked, tile_pos_dict, wall_type)
+    if start["wallD"] == wall_type:
         new_position = (start["x"], start["y"] + 1)
         if new_position in tile_pos_dict:
-            find_group(group, tile_pos_dict[new_position], checked, tile_pos_dict)
+            find_group(group, tile_pos_dict[new_position], checked, tile_pos_dict, wall_type)
         
 
 def create_tile_pos_dict(tile_data: list) -> dict:
