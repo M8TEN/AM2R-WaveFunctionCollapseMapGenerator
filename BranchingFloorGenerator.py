@@ -3,8 +3,8 @@ import time
 from copy import deepcopy
 from random import randint, seed
 
-WIDTH = 30 # Width of the map to generate. Maximum is 74
-HEIGHT = 10 # Height of the map to generate. Maximum is 57
+WIDTH = 74 # Width of the map to generate. Maximum is 74
+HEIGHT = 57 # Height of the map to generate. Maximum is 57
 START = (3,3) # Coordinate of the top-left corner in the output space
 
 # Data Container class to hold information about a tile in the grid
