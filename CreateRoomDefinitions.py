@@ -12,7 +12,7 @@ def top_left_corner(room: list) -> tuple:
             origin_pos = tile_pos
     return origin_pos
 
-with open("Inputs/A3Only.json", "r") as file:
+with open("Inputs/ThisMightBreak.json", "r") as file:
     tile_data = json.load(file)
 
 tile_pos_dict = create_tile_pos_dict(tile_data)
@@ -59,6 +59,8 @@ for room in rooms:
     room_as_dict["Layout"] = layout
     room_as_dict["IsDeadEnd"] = num_of_doors <= 1
     room_as_dict["Weight"] = 0 if (num_of_doors <= 1) else 1.0/len(rooms)
+    if len(layout) == 1 and num_of_doors > 1:
+        room_as_dict["Weight"] = 0.00001
     out.append(room_as_dict)
     room_idx += 1
 

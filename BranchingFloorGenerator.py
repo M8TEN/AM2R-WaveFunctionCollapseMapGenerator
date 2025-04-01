@@ -1,11 +1,20 @@
 import json
 import time
+import traceback
 from copy import deepcopy
+from functools import reduce
 from random import randint, uniform, seed
 
-WIDTH = 35 # Width of the map to generate. Maximum is 74
-HEIGHT = 28 # Height of the map to generate. Maximum is 57
+try:
+    WIDTH = min(74, abs(int(input("How many tiles wide should the map be? ")))) # Width of the map to generate. Maximum is 74
+    HEIGHT = min(57, abs(int(input("How many tiles high should the map be? ")))) # Height of the map to generate. Maximum is 57
+except ValueError:
+    print("Input must be single integer")
+    exit(1)
+
 START = (3,3) # Coordinate of the top-left corner in the output space
+MAJOR_NAMES = ["Bombs", "Power Grip", "Spider Ball", "Spring Ball", "Hi-Jump", "Varia Suit", "Space Jump", "Speedbooster", "Screw Attack", "Gravity Suit",
+                "Charge Beam", "Ice Beam", "Wave Beam", "Spazer", "Plasma Beam", "Flash Shift", "Scan Pulse", "Shotgun Missiles", "Reserve Tank", "Lightning Armor", "Power Spark"]
 
 # Data Container class to hold information about a tile in the grid
 class Tile:
@@ -127,9 +136,9 @@ def draw_room(draw_begin: tuple, layout: dict, open_connections: list):
         if chance >= 0.8:
             major = possible_majors.pop(randint(0, len(possible_majors)-1))
             inv[major] = 1
-            possible_lock_states = inventory_to_lock_states(inv)
+            possible_lock_states += unlocked_states(major, inv)
             tiles_with_items.append(grid_pos)
-            print(f"Placed item with ID {major} in Tile {grid_pos}")
+            print(f"Placed {MAJOR_NAMES[major]} (ID {major}) in Tile {grid_pos}")
     
     if len(layout) == 1 and (int(has_door(layout, 0)) + int(has_door(layout, 1)) + int(has_door(layout, 2)) + int(has_door(layout, 3)) == 1):
         placed_dead_ends.append(draw_begin)
@@ -174,7 +183,21 @@ def generate(grid, next_tile, door_dir, depth = 0):
         return
 
 
-    room_to_place_idx = randint(0, len(possible_rooms)-1)
+    total_weights: float = 0.0
+    for room in possible_rooms:
+        if depth < room["Scaling Min"]:
+            scale_amount = 0.0
+        elif depth < room["Scaling Max"] or room["Scaling Max"] == -1:
+            scale_amount = depth
+        else:
+            scale_amount = room["Scaling Max"]
+        total_weights += room["Weight"] + room["Scaling"] * scale_amount
+    choice = uniform(0, total_weights)
+    room_to_place_idx = 0
+    while (choice > 0):
+        choice -= possible_rooms[room_to_place_idx]["Weight"] + possible_rooms[room_to_place_idx]["Scaling"] * scale_amount
+        room_to_place_idx += 1
+    room_to_place_idx -= 1
     room_chosen = possible_rooms[room_to_place_idx]
     room_offset_str = possible_connections[room_to_place_idx][randint(0, len(possible_connections[room_to_place_idx])-1)]
     room_offset = tuple(map(int, room_offset_str.split(",")))
@@ -186,6 +209,41 @@ def generate(grid, next_tile, door_dir, depth = 0):
     for connection in open_connections:
         generate(grid, connection[0], connection[1], depth + 1)
 
+def unlocked_states(item_id: int, inventory: list) -> list:
+    match item_id:
+        case 0: #Bombs
+            return [0,9,12,13,14,15,16,17,18,19,27,33,35]
+        case 2: #Spider ball
+            return [9,10,11,12,15,16]
+        case 3: #Spring ball
+            if inventory[7] == 1:
+                return [5]
+            else:
+                return []
+        case 4: #Hi-Jump
+            return [12,13,14]
+        case 5: #Varia
+            return [24]
+        case 6: #Space Jump
+            space_states = [15,16,17,18,19]
+            if inventory[7] == 1:
+                space_states.append(6)
+            return space_states
+        case 7: #Speedbooster
+            return [4,5,33,34]
+        case 8: #Screw Attack
+            return [7]
+        case 9: #Gravity
+            return [23,25,26]
+        case 11: #Ice Beam
+            return [29]
+        case 12: #Wave Beam
+            return [20,21,22]
+        case 20: #Power Spark
+            return [3,4,5,15,16,17,18]
+        case _:
+            return []
+
 # Maps an inventory loadout to possible room lock states        
 def inventory_to_lock_states(inventory: list) -> list:
     states = []
@@ -193,36 +251,8 @@ def inventory_to_lock_states(inventory: list) -> list:
         is_collected = inventory[idx] == 1
         if not is_collected:
             continue
-        match idx:
-            case 0: #Bombs
-                states += [0,9,12,13,14,15,16,17,18,19,27,33,35]
-            case 2: #Spider ball
-                states += [9,10,11,12,15,16]
-            case 3: #Spring ball
-                if inventory[7] == 1:
-                    states += [5]
-            case 4: #Hi-Jump
-                states += [12,13,14]
-            case 5: #Varia
-                states += [24]
-            case 6: #Space Jump
-                states += [15,16,17,18,19]
-                if inventory[7] == 1:
-                    states.append(6)
-            case 7: #Speedbooster
-                states += [4,5,33,34]
-            case 8: #Screw Attack
-                states += [7]
-            case 9: #Gravity
-                states += [23,25,26]
-            case 11: #Ice Beam
-                states += [29]
-            case 12: #Wave Beam
-                states += [20,21,22]
-            case 20: #Power Spark
-                states += [3,4,5,15,16,17,18]
-            case _:
-                pass
+        states += unlocked_states(idx, inventory)
+        
     
     return list(set(states))
             
@@ -235,43 +265,49 @@ if __name__ == "__main__":
     with open("Test.json", "r") as file:
         room_data = json.load(file)
 
-    grid = create_grid(WIDTH, HEIGHT)
-    dead_ends = get_dead_ends(room_data)
-    start_pos = (randint(0, WIDTH-1), randint(0, HEIGHT-1))
+    success = False
+    while not success:
+        try:
+            grid = create_grid(WIDTH, HEIGHT)
+            dead_ends = get_dead_ends(room_data)
+            start_pos = (randint(0, WIDTH-1), randint(0, HEIGHT-1))
 
-    if start_pos[0] == 0:
-        possible_start_tiles = [Tile(2, 1, 1, 1)]
-    elif start_pos[0] == WIDTH-1:
-        possible_start_tiles = [Tile(1, 1, 2, 1)]
-    else:
-        possible_start_tiles = [
-        Tile(2, 1, 1, 1),
-        Tile(1, 1, 2, 1),
-    ]
+            if start_pos[0] == 0:
+                possible_start_tiles = [Tile(2, 1, 1, 1)]
+            elif start_pos[0] == WIDTH-1:
+                possible_start_tiles = [Tile(1, 1, 2, 1)]
+            else:
+                possible_start_tiles = [
+                Tile(2, 1, 1, 1),
+                Tile(1, 1, 2, 1),
+            ]
 
-    start_tile = possible_start_tiles[randint(0, len(possible_start_tiles)-1)]
-    grid[start_pos] = start_tile
+            start_tile = possible_start_tiles[randint(0, len(possible_start_tiles)-1)]
+            grid[start_pos] = start_tile
 
-    if start_tile.r == 2:
-        next_pos = (start_pos[0] + 1, start_pos[1])
-        direction = 2
-    elif start_tile.l == 2:
-        next_pos = (start_pos[0] - 1, start_pos[1])
-        direction = 0
-    else:
-        next_pos = start_pos
-        direction = 0
+            if start_tile.r == 2:
+                next_pos = (start_pos[0] + 1, start_pos[1])
+                direction = 2
+            elif start_tile.l == 2:
+                next_pos = (start_pos[0] - 1, start_pos[1])
+                direction = 0
+            else:
+                next_pos = start_pos
+                direction = 0
 
-    placed_dead_ends = []
-    inv = [0]*21
-    possible_majors = list(range(21))
-    possible_majors = [m for m in possible_majors if inv[m] == 0]
-    tiles_with_items = []
-    possible_lock_states = inventory_to_lock_states(inv)
-    generate(grid, next_pos, direction, 0)
+            placed_dead_ends = []
+            inv = [0]*21
+            possible_majors = list(range(21))
+            possible_majors = [m for m in possible_majors if inv[m] == 0]
+            tiles_with_items = []
+            possible_lock_states = inventory_to_lock_states(inv)
+            generate(grid, next_pos, direction, 0)
+            success = True
+        except:
+            traceback.print_exc()
+            print("Rerolling..\n\n\n\n")
 
     # Format output
-
     prototype_tile = {
         "color": 0,
         "corner": 0,
@@ -286,7 +322,11 @@ if __name__ == "__main__":
     }
 
     out = []
-    boss_tile = placed_dead_ends[randint(0, len(placed_dead_ends)-1)]
+    try:
+        boss_tile = placed_dead_ends[randint(0, len(placed_dead_ends)-1)]
+    except:
+        print("Error: No dead end for boss placement, not setting boss tile")
+        boss_tile = (-1,-1)
 
     for position in grid:
         if grid[position] != None:
