@@ -12,7 +12,7 @@ def top_left_corner(room: list) -> tuple:
             origin_pos = tile_pos
     return origin_pos
 
-with open("Inputs/ThisMightBreak.json", "r") as file:
+with open("Inputs/A3Only.json", "r") as file:
     tile_data = json.load(file)
 
 tile_pos_dict = create_tile_pos_dict(tile_data)
@@ -28,6 +28,7 @@ while len(tile_data) > 0:
 print(f"Found {len(rooms)} rooms")
 
 out = []
+num_of_tiles = 0
 room_idx = 0
 
 for room in rooms:
@@ -43,8 +44,9 @@ for room in rooms:
     layout = {}
     num_of_doors = 0
     for tile in room:
+        num_of_tiles += 1
         key = f"{tile['x']-top_left[0]},{tile['y']-top_left[1]}"
-        value = [tile["wallR"], tile["wallU"], tile["wallL"], tile["wallD"], False, []]
+        value = [tile["wallR"], tile["wallU"], tile["wallL"], tile["wallD"], (tile["special"] == 3 or tile["special"] == 4), []]
         if tile["wallR"] == 2:
             num_of_doors += 1
         if tile["wallU"] == 2:
@@ -56,9 +58,11 @@ for room in rooms:
         layout[key] = value
     room_as_dict["Layout"] = layout
     room_as_dict["IsDeadEnd"] = num_of_doors <= 1
-    room_as_dict["Weight"] = 0 if (num_of_doors <= 1) else 1
+    room_as_dict["Weight"] = 0 if (num_of_doors <= 1) else 1.0/len(rooms)
     out.append(room_as_dict)
     room_idx += 1
+
+print(f"Processed {num_of_tiles} tiles")
 
 with open("Test.json", "w") as file:
     json.dump(out, file, indent=2)

@@ -1,10 +1,10 @@
 import json
 import time
 from copy import deepcopy
-from random import randint, seed
+from random import randint, uniform, seed
 
-WIDTH = 74 # Width of the map to generate. Maximum is 74
-HEIGHT = 57 # Height of the map to generate. Maximum is 57
+WIDTH = 35 # Width of the map to generate. Maximum is 74
+HEIGHT = 28 # Height of the map to generate. Maximum is 57
 START = (3,3) # Coordinate of the top-left corner in the output space
 
 # Data Container class to hold information about a tile in the grid
@@ -43,11 +43,16 @@ def has_door(layout: dict, door_dir: int) -> bool:
 
 # Returns a list of rooms filtered by their probability (weight) and if they have a door in the direction given
 def get_possible_rooms(door_dir):
-    possible_rooms = [r for r in room_data if r["Weight"] > 0]
+    possible_rooms = [r for r in room_data if (r["Weight"] > 0)]
     idx = 0
     while idx < len(possible_rooms):
         room = possible_rooms[idx]
-        if not has_door(room["Layout"], door_dir):
+        is_locked = False
+        for lock in room["Lock"]:
+            if not lock in possible_lock_states:
+                is_locked = True
+                break
+        if not has_door(room["Layout"], door_dir) or is_locked:
             del possible_rooms[idx]
             continue
         else:
@@ -103,13 +108,12 @@ def validate_room_position(grid: dict, global_start_pos: tuple, relative_key: st
 
 # Writes the tile data into the grid
 def draw_room(draw_begin: tuple, layout: dict, open_connections: list):
-    last_tile_placed: Tile = None
+    global possible_lock_states, tiles_with_items
     for key in layout:
         tile_pos = tuple(map(int, key.split(",")))
         grid_pos = (draw_begin[0] + tile_pos[0], draw_begin[1] + tile_pos[1])
         tile_data = layout[key]
         grid[grid_pos] = Tile(tile_data[0], tile_data[1], tile_data[2], tile_data[3])
-        last_tile_placed = grid[grid_pos]
         if tile_data[0] == 2:
             open_connections.append([(grid_pos[0] + 1, grid_pos[1]), 2])
         if tile_data[1] == 2:
@@ -118,6 +122,14 @@ def draw_room(draw_begin: tuple, layout: dict, open_connections: list):
             open_connections.append([(grid_pos[0] - 1, grid_pos[1]), 0])
         if tile_data[3] == 2:
             open_connections.append([(grid_pos[0], grid_pos[1] + 1), 1])
+        items_locks = [l for l in possible_lock_states if l in layout[key][5]]
+        chance = uniform(0,1) * int(layout[key][4]) * int(len(possible_majors) > 0) * int(len(items_locks) == len(layout[key][5]))
+        if chance >= 0.8:
+            major = possible_majors.pop(randint(0, len(possible_majors)-1))
+            inv[major] = 1
+            possible_lock_states = inventory_to_lock_states(inv)
+            tiles_with_items.append(grid_pos)
+            print(f"Placed item with ID {major} in Tile {grid_pos}")
     
     if len(layout) == 1 and (int(has_door(layout, 0)) + int(has_door(layout, 1)) + int(has_door(layout, 2)) + int(has_door(layout, 3)) == 1):
         placed_dead_ends.append(draw_begin)
@@ -173,81 +185,128 @@ def generate(grid, next_tile, door_dir, depth = 0):
     
     for connection in open_connections:
         generate(grid, connection[0], connection[1], depth + 1)
-        
 
+# Maps an inventory loadout to possible room lock states        
+def inventory_to_lock_states(inventory: list) -> list:
+    states = []
+    for idx in range(len(inventory)):
+        is_collected = inventory[idx] == 1
+        if not is_collected:
+            continue
+        match idx:
+            case 0: #Bombs
+                states += [0,9,12,13,14,15,16,17,18,19,27,33,35]
+            case 2: #Spider ball
+                states += [9,10,11,12,15,16]
+            case 3: #Spring ball
+                if inventory[7] == 1:
+                    states += [5]
+            case 4: #Hi-Jump
+                states += [12,13,14]
+            case 5: #Varia
+                states += [24]
+            case 6: #Space Jump
+                states += [15,16,17,18,19]
+                if inventory[7] == 1:
+                    states.append(6)
+            case 7: #Speedbooster
+                states += [4,5,33,34]
+            case 8: #Screw Attack
+                states += [7]
+            case 9: #Gravity
+                states += [23,25,26]
+            case 11: #Ice Beam
+                states += [29]
+            case 12: #Wave Beam
+                states += [20,21,22]
+            case 20: #Power Spark
+                states += [3,4,5,15,16,17,18]
+            case _:
+                pass
+    
+    return list(set(states))
+            
     
 # START OF MAIN PROGRAM
-start_time = time.time()
-#seed(100)
+if __name__ == "__main__":
+    start_time = time.time()
+    #seed(100)
 
-with open("Test.json", "r") as file:
-    room_data = json.load(file)
+    with open("Test.json", "r") as file:
+        room_data = json.load(file)
 
-grid = create_grid(WIDTH, HEIGHT)
-dead_ends = get_dead_ends(room_data)
-start_pos = (randint(0, WIDTH-1), randint(0, HEIGHT-1))
+    grid = create_grid(WIDTH, HEIGHT)
+    dead_ends = get_dead_ends(room_data)
+    start_pos = (randint(0, WIDTH-1), randint(0, HEIGHT-1))
 
-if start_pos[0] == 0:
-    possible_start_tiles = [Tile(2, 1, 1, 1)]
-elif start_pos[0] == WIDTH-1:
-    possible_start_tiles = [Tile(1, 1, 2, 1)]
-else:
-    possible_start_tiles = [
-    Tile(2, 1, 1, 1),
-    Tile(1, 1, 2, 1),
-]
+    if start_pos[0] == 0:
+        possible_start_tiles = [Tile(2, 1, 1, 1)]
+    elif start_pos[0] == WIDTH-1:
+        possible_start_tiles = [Tile(1, 1, 2, 1)]
+    else:
+        possible_start_tiles = [
+        Tile(2, 1, 1, 1),
+        Tile(1, 1, 2, 1),
+    ]
 
-start_tile = possible_start_tiles[randint(0, len(possible_start_tiles)-1)]
-grid[start_pos] = start_tile
+    start_tile = possible_start_tiles[randint(0, len(possible_start_tiles)-1)]
+    grid[start_pos] = start_tile
 
-if start_tile.r == 2:
-    next_pos = (start_pos[0] + 1, start_pos[1])
-    direction = 2
-elif start_tile.l == 2:
-    next_pos = (start_pos[0] - 1, start_pos[1])
-    direction = 0
-else:
-    next_pos = start_pos
-    direction = 0
+    if start_tile.r == 2:
+        next_pos = (start_pos[0] + 1, start_pos[1])
+        direction = 2
+    elif start_tile.l == 2:
+        next_pos = (start_pos[0] - 1, start_pos[1])
+        direction = 0
+    else:
+        next_pos = start_pos
+        direction = 0
 
-placed_dead_ends = []
-generate(grid, next_pos, direction, 0)
+    placed_dead_ends = []
+    inv = [0]*21
+    possible_majors = list(range(21))
+    possible_majors = [m for m in possible_majors if inv[m] == 0]
+    tiles_with_items = []
+    possible_lock_states = inventory_to_lock_states(inv)
+    generate(grid, next_pos, direction, 0)
 
-# Format output
+    # Format output
 
-prototype_tile = {
-    "color": 0,
-    "corner": 0,
-    "isCorner": False,
-    "special": 0,
-    "wallD": 1,
-    "wallL": 1,
-    "wallU": 1,
-    "wallR": 1,
-    "x": 0,
-    "y": 0
-}
+    prototype_tile = {
+        "color": 0,
+        "corner": 0,
+        "isCorner": False,
+        "special": 0,
+        "wallD": 1,
+        "wallL": 1,
+        "wallU": 1,
+        "wallR": 1,
+        "x": 0,
+        "y": 0
+    }
 
-out = []
-boss_tile = placed_dead_ends[randint(0, len(placed_dead_ends)-1)]
+    out = []
+    boss_tile = placed_dead_ends[randint(0, len(placed_dead_ends)-1)]
 
-for position in grid:
-    if grid[position] != None:
-        new_tile = deepcopy(prototype_tile)
-        new_tile["wallL"] = grid[position].l
-        new_tile["wallU"] = grid[position].u
-        new_tile["wallD"] = grid[position].d
-        new_tile["wallR"] = grid[position].r
-        new_tile["x"] = position[0] + START[0]
-        new_tile["y"] = position[1] + START[1]
-        if position == start_pos:
-            new_tile["special"] = 1
-        if position == boss_tile:
-            new_tile["special"] = 4
-        out.append(new_tile)
+    for position in grid:
+        if grid[position] != None:
+            new_tile = deepcopy(prototype_tile)
+            new_tile["wallL"] = grid[position].l
+            new_tile["wallU"] = grid[position].u
+            new_tile["wallD"] = grid[position].d
+            new_tile["wallR"] = grid[position].r
+            new_tile["x"] = position[0] + START[0]
+            new_tile["y"] = position[1] + START[1]
+            if position == start_pos:
+                new_tile["special"] = 1
+            if position == boss_tile:
+                new_tile["special"] = 4
+            if position in tiles_with_items:
+                new_tile["special"] = 3
+            out.append(new_tile)
 
-with open("BranchingOutput.json", "w") as file:
-    json.dump(out, file, indent=2)
+    with open("BranchingOutput.json", "w") as file:
+        json.dump(out, file, indent=2)
 
-print(f"Execution time: {(time.time() - start_time)}s")
-print("Done")
+    print(f"Execution time: {(time.time() - start_time)}s")
+    print("Done")
