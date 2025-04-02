@@ -1,5 +1,4 @@
 import json
-from functools import reduce
 from GroupTiles import create_tile_pos_dict, find_group
 
 def top_left_corner(room: list) -> tuple:
