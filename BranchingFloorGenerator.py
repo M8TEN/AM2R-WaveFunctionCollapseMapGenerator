@@ -2,7 +2,6 @@ import json
 import time
 import traceback
 from copy import deepcopy
-from functools import reduce
 from random import randint, uniform, seed
 
 try:
@@ -51,8 +50,8 @@ def has_door(layout: dict, door_dir: int) -> bool:
     return False
 
 # Returns a list of rooms filtered by their probability (weight) and if they have a door in the direction given
-def get_possible_rooms(door_dir):
-    possible_rooms = [r for r in room_data if (r["Weight"] > 0)]
+def get_possible_rooms(door_dir: int, depth: int) -> list:
+    possible_rooms = [r for r in room_data if (room_weight(r, depth) > 0)]
     idx = 0
     while idx < len(possible_rooms):
         room = possible_rooms[idx]
@@ -145,7 +144,9 @@ def draw_room(draw_begin: tuple, layout: dict, open_connections: list):
 
 # Recursively creates branches of rooms until the grid is fully populated or no more room can be placed
 def generate(grid, next_tile, door_dir, depth = 0):
-    possible_rooms = get_possible_rooms(door_dir)
+    global frames
+    frames += 1
+    possible_rooms = get_possible_rooms(door_dir, depth)
     possible_connections = []
 
     for room in possible_rooms:
@@ -185,17 +186,11 @@ def generate(grid, next_tile, door_dir, depth = 0):
 
     total_weights: float = 0.0
     for room in possible_rooms:
-        if depth < room["Scaling Min"]:
-            scale_amount = 0.0
-        elif depth < room["Scaling Max"] or room["Scaling Max"] == -1:
-            scale_amount = depth
-        else:
-            scale_amount = room["Scaling Max"]
-        total_weights += room["Weight"] + room["Scaling"] * scale_amount
+        total_weights += room_weight(room, depth)
     choice = uniform(0, total_weights)
     room_to_place_idx = 0
     while (choice > 0):
-        choice -= possible_rooms[room_to_place_idx]["Weight"] + possible_rooms[room_to_place_idx]["Scaling"] * scale_amount
+        choice -= room_weight(possible_rooms[room_to_place_idx], depth)
         room_to_place_idx += 1
     room_to_place_idx -= 1
     room_chosen = possible_rooms[room_to_place_idx]
@@ -208,6 +203,15 @@ def generate(grid, next_tile, door_dir, depth = 0):
     
     for connection in open_connections:
         generate(grid, connection[0], connection[1], depth + 1)
+
+def room_weight(room: dict, depth: int) -> float:
+    if depth < room["Scaling Min"]:
+        scale_amount = 0.0
+    elif depth < room["Scaling Max"] or room["Scaling Max"] == -1:
+        scale_amount = depth
+    else:
+        scale_amount = room["Scaling Max"]
+    return room["Weight"] + room["Scaling"] * scale_amount
 
 def unlocked_states(item_id: int, inventory: list) -> list:
     match item_id:
@@ -268,6 +272,7 @@ if __name__ == "__main__":
     success = False
     while not success:
         try:
+            frames = 0
             grid = create_grid(WIDTH, HEIGHT)
             dead_ends = get_dead_ends(room_data)
             start_pos = (randint(0, WIDTH-1), randint(0, HEIGHT-1))
@@ -322,6 +327,7 @@ if __name__ == "__main__":
     }
 
     out = []
+    placed_dead_ends = [e for e in placed_dead_ends if not e in tiles_with_items]
     try:
         boss_tile = placed_dead_ends[randint(0, len(placed_dead_ends)-1)]
     except:
@@ -339,14 +345,15 @@ if __name__ == "__main__":
             new_tile["y"] = position[1] + START[1]
             if position == start_pos:
                 new_tile["special"] = 1
-            if position == boss_tile:
-                new_tile["special"] = 4
             if position in tiles_with_items:
                 new_tile["special"] = 3
+            if position == boss_tile:
+                new_tile["special"] = 4
             out.append(new_tile)
 
     with open("BranchingOutput.json", "w") as file:
         json.dump(out, file, indent=2)
 
     print(f"Execution time: {(time.time() - start_time)}s")
+    print(f"{frames} iterations through generate()")
     print("Done")

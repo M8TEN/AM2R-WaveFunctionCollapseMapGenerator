@@ -1300,9 +1300,9 @@
     "RoomID": 11,
     "Lock": [],
     "Weight": 0,
-    "Scaling": 0,
+    "Scaling": 1.5e-05,
     "Scaling Min": 4,
-    "Scaling Max": -1,
+    "Scaling Max": 30,
     "Layout": {
       "0,0": [
         2,
@@ -1319,9 +1319,9 @@
     "RoomID": 12,
     "Lock": [],
     "Weight": 0,
-    "Scaling": 0,
+    "Scaling": 1.5e-05,
     "Scaling Min": 4,
-    "Scaling Max": -1,
+    "Scaling Max": 30,
     "Layout": {
       "0,0": [
         0,
@@ -1427,9 +1427,9 @@
     "RoomID": 16,
     "Lock": [],
     "Weight": 0,
-    "Scaling": 0,
+    "Scaling": 1.5e-05,
     "Scaling Min": 4,
-    "Scaling Max": -1,
+    "Scaling Max": 30,
     "Layout": {
       "0,0": [
         0,
@@ -1462,9 +1462,9 @@
     "RoomID": 17,
     "Lock": [],
     "Weight": 0,
-    "Scaling": 0,
+    "Scaling": 1.5e-05,
     "Scaling Min": 4,
-    "Scaling Max": -1,
+    "Scaling Max": 30,
     "Layout": {
       "1,0": [
         2,
@@ -1489,9 +1489,9 @@
     "RoomID": 18,
     "Lock": [],
     "Weight": 0,
-    "Scaling": 0,
+    "Scaling": 1.5e-05,
     "Scaling Min": 4,
-    "Scaling Max": -1,
+    "Scaling Max": 30,
     "Layout": {
       "0,0": [
         2,
@@ -1828,9 +1828,9 @@
     "RoomID": 27,
     "Lock": [],
     "Weight": 0,
-    "Scaling": 0,
+    "Scaling": 1.5e-05,
     "Scaling Min": 4,
-    "Scaling Max": -1,
+    "Scaling Max": 30,
     "Layout": {
       "0,1": [
         0,
@@ -1871,9 +1871,9 @@
     "RoomID": 28,
     "Lock": [],
     "Weight": 0,
-    "Scaling": 0,
+    "Scaling": 1.5e-05,
     "Scaling Min": 4,
-    "Scaling Max": -1,
+    "Scaling Max": 30,
     "Layout": {
       "0,0": [
         1,
@@ -2003,9 +2003,9 @@
     "RoomID": 32,
     "Lock": [],
     "Weight": 0,
-    "Scaling": 0,
+    "Scaling": 1.5e-05,
     "Scaling Min": 4,
-    "Scaling Max": -1,
+    "Scaling Max": 30,
     "Layout": {
       "0,0": [
         2,
@@ -2162,9 +2162,9 @@
     "RoomID": 37,
     "Lock": [],
     "Weight": 0,
-    "Scaling": 0,
+    "Scaling": 1.5e-05,
     "Scaling Min": 4,
-    "Scaling Max": -1,
+    "Scaling Max": 30,
     "Layout": {
       "3,0": [
         2,
@@ -2205,9 +2205,9 @@
     "RoomID": 38,
     "Lock": [],
     "Weight": 0,
-    "Scaling": 0,
+    "Scaling": 1.5e-05,
     "Scaling Min": 4,
-    "Scaling Max": -1,
+    "Scaling Max": 30,
     "Layout": {
       "0,0": [
         0,
@@ -2232,9 +2232,9 @@
     "RoomID": 39,
     "Lock": [],
     "Weight": 0,
-    "Scaling": 0,
+    "Scaling": 1.5e-05,
     "Scaling Min": 4,
-    "Scaling Max": -1,
+    "Scaling Max": 30,
     "Layout": {
       "0,0": [
         0,
@@ -2665,9 +2665,9 @@
     "RoomID": 42,
     "Lock": [],
     "Weight": 0,
-    "Scaling": 0,
+    "Scaling": 1.5e-05,
     "Scaling Min": 4,
-    "Scaling Max": -1,
+    "Scaling Max": 30,
     "Layout": {
       "0,0": [
         0,
@@ -2719,9 +2719,9 @@
     "RoomID": 44,
     "Lock": [],
     "Weight": 0,
-    "Scaling": 0,
+    "Scaling": 1.5e-05,
     "Scaling Min": 4,
-    "Scaling Max": -1,
+    "Scaling Max": 30,
     "Layout": {
       "0,0": [
         1,
@@ -2832,9 +2832,9 @@
     "RoomID": 47,
     "Lock": [],
     "Weight": 0,
-    "Scaling": 0,
+    "Scaling": 1.5e-05,
     "Scaling Min": 4,
-    "Scaling Max": -1,
+    "Scaling Max": 30,
     "Layout": {
       "0,0": [
         0,
@@ -3090,9 +3090,9 @@
     "RoomID": 53,
     "Lock": [],
     "Weight": 0,
-    "Scaling": 0,
+    "Scaling": 1.5e-05,
     "Scaling Min": 4,
-    "Scaling Max": -1,
+    "Scaling Max": 30,
     "Layout": {
       "0,0": [
         2,
@@ -3109,9 +3109,9 @@
     "RoomID": 54,
     "Lock": [],
     "Weight": 0,
-    "Scaling": 0,
+    "Scaling": 1.5e-05,
     "Scaling Min": 4,
-    "Scaling Max": -1,
+    "Scaling Max": 30,
     "Layout": {
       "0,0": [
         2,
@@ -3155,9 +3155,9 @@
     "RoomID": 56,
     "Lock": [],
     "Weight": 0,
-    "Scaling": 0,
+    "Scaling": 1.5e-05,
     "Scaling Min": 4,
-    "Scaling Max": -1,
+    "Scaling Max": 30,
     "Layout": {
       "0,0": [
         0,
@@ -3190,9 +3190,9 @@
     "RoomID": 57,
     "Lock": [],
     "Weight": 0,
-    "Scaling": 0,
+    "Scaling": 1.5e-05,
     "Scaling Min": 4,
-    "Scaling Max": -1,
+    "Scaling Max": 30,
     "Layout": {
       "0,0": [
         1,
@@ -3623,9 +3623,9 @@
     "RoomID": 60,
     "Lock": [],
     "Weight": 0,
-    "Scaling": 0,
+    "Scaling": 1.5e-05,
     "Scaling Min": 4,
-    "Scaling Max": -1,
+    "Scaling Max": 30,
     "Layout": {
       "1,0": [
         2,
@@ -3771,9 +3771,9 @@
     "RoomID": 64,
     "Lock": [],
     "Weight": 0,
-    "Scaling": 0,
+    "Scaling": 1.5e-05,
     "Scaling Min": 4,
-    "Scaling Max": -1,
+    "Scaling Max": 30,
     "Layout": {
       "1,0": [
         2,
@@ -3841,9 +3841,9 @@
     "RoomID": 66,
     "Lock": [],
     "Weight": 0,
-    "Scaling": 0,
+    "Scaling": 1.5e-05,
     "Scaling Min": 4,
-    "Scaling Max": -1,
+    "Scaling Max": 30,
     "Layout": {
       "2,0": [
         2,
@@ -3938,9 +3938,9 @@
     "RoomID": 69,
     "Lock": [],
     "Weight": 0,
-    "Scaling": 0,
+    "Scaling": 1.5e-05,
     "Scaling Min": 4,
-    "Scaling Max": -1,
+    "Scaling Max": 30,
     "Layout": {
       "0,0": [
         0,
@@ -4005,9 +4005,9 @@
     "RoomID": 70,
     "Lock": [],
     "Weight": 0,
-    "Scaling": 0,
+    "Scaling": 1.5e-05,
     "Scaling Min": 4,
-    "Scaling Max": -1,
+    "Scaling Max": 30,
     "Layout": {
       "0,0": [
         2,
@@ -4051,9 +4051,9 @@
     "RoomID": 72,
     "Lock": [],
     "Weight": 0,
-    "Scaling": 0,
+    "Scaling": 1.5e-05,
     "Scaling Min": 4,
-    "Scaling Max": -1,
+    "Scaling Max": 30,
     "Layout": {
       "1,0": [
         1,
@@ -4124,9 +4124,9 @@
     "RoomID": 75,
     "Lock": [],
     "Weight": 0,
-    "Scaling": 0,
+    "Scaling": 1.5e-05,
     "Scaling Min": 4,
-    "Scaling Max": -1,
+    "Scaling Max": 30,
     "Layout": {
       "1,0": [
         2,
@@ -4318,9 +4318,9 @@
     "RoomID": 81,
     "Lock": [],
     "Weight": 0,
-    "Scaling": 0,
+    "Scaling": 1.5e-05,
     "Scaling Min": 4,
-    "Scaling Max": -1,
+    "Scaling Max": 30,
     "Layout": {
       "0,0": [
         2,
@@ -4461,9 +4461,9 @@
     "RoomID": 86,
     "Lock": [],
     "Weight": 0,
-    "Scaling": 0,
+    "Scaling": 1.5e-05,
     "Scaling Min": 4,
-    "Scaling Max": -1,
+    "Scaling Max": 30,
     "Layout": {
       "0,0": [
         2,
@@ -4577,9 +4577,9 @@
     "RoomID": 90,
     "Lock": [],
     "Weight": 0,
-    "Scaling": 0,
+    "Scaling": 1.5e-05,
     "Scaling Min": 4,
-    "Scaling Max": -1,
+    "Scaling Max": 30,
     "Layout": {
       "1,0": [
         2,
@@ -4604,9 +4604,9 @@
     "RoomID": 91,
     "Lock": [],
     "Weight": 0,
-    "Scaling": 0,
+    "Scaling": 1.5e-05,
     "Scaling Min": 4,
-    "Scaling Max": -1,
+    "Scaling Max": 30,
     "Layout": {
       "1,0": [
         2,
@@ -4701,9 +4701,9 @@
     "RoomID": 94,
     "Lock": [],
     "Weight": 0,
-    "Scaling": 0,
+    "Scaling": 1.5e-05,
     "Scaling Min": 4,
-    "Scaling Max": -1,
+    "Scaling Max": 30,
     "Layout": {
       "0,1": [
         0,
@@ -4827,9 +4827,9 @@
     "RoomID": 96,
     "Lock": [],
     "Weight": 0,
-    "Scaling": 0,
+    "Scaling": 1.5e-05,
     "Scaling Min": 4,
-    "Scaling Max": -1,
+    "Scaling Max": 30,
     "Layout": {
       "4,2": [
         2,
@@ -5183,9 +5183,9 @@
     "RoomID": 100,
     "Lock": [],
     "Weight": 0,
-    "Scaling": 0,
+    "Scaling": 1.5e-05,
     "Scaling Min": 4,
-    "Scaling Max": -1,
+    "Scaling Max": 30,
     "Layout": {
       "0,0": [
         1,
@@ -5237,9 +5237,9 @@
     "RoomID": 102,
     "Lock": [],
     "Weight": 0,
-    "Scaling": 0,
+    "Scaling": 1.5e-05,
     "Scaling Min": 4,
-    "Scaling Max": -1,
+    "Scaling Max": 30,
     "Layout": {
       "0,0": [
         0,
@@ -5393,9 +5393,9 @@
     "RoomID": 106,
     "Lock": [],
     "Weight": 0,
-    "Scaling": 0,
+    "Scaling": 1.5e-05,
     "Scaling Min": 4,
-    "Scaling Max": -1,
+    "Scaling Max": 30,
     "Layout": {
       "0,0": [
         2,
@@ -5552,9 +5552,9 @@
     "RoomID": 111,
     "Lock": [],
     "Weight": 0,
-    "Scaling": 0,
+    "Scaling": 1.5e-05,
     "Scaling Min": 4,
-    "Scaling Max": -1,
+    "Scaling Max": 30,
     "Layout": {
       "0,0": [
         2,
@@ -5907,9 +5907,9 @@
     "RoomID": 120,
     "Lock": [],
     "Weight": 0,
-    "Scaling": 0,
+    "Scaling": 1.5e-05,
     "Scaling Min": 4,
-    "Scaling Max": -1,
+    "Scaling Max": 30,
     "Layout": {
       "1,0": [
         1,
@@ -5969,9 +5969,9 @@
     "RoomID": 122,
     "Lock": [],
     "Weight": 0,
-    "Scaling": 0,
+    "Scaling": 1.5e-05,
     "Scaling Min": 4,
-    "Scaling Max": -1,
+    "Scaling Max": 30,
     "Layout": {
       "0,0": [
         1,
@@ -5988,9 +5988,9 @@
     "RoomID": 123,
     "Lock": [],
     "Weight": 0,
-    "Scaling": 0,
+    "Scaling": 1.5e-05,
     "Scaling Min": 4,
-    "Scaling Max": -1,
+    "Scaling Max": 30,
     "Layout": {
       "0,0": [
         1,
@@ -6491,9 +6491,9 @@
     "RoomID": 128,
     "Lock": [],
     "Weight": 0,
-    "Scaling": 0,
+    "Scaling": 1.5e-05,
     "Scaling Min": 4,
-    "Scaling Max": -1,
+    "Scaling Max": 30,
     "Layout": {
       "0,0": [
         0,
@@ -6518,9 +6518,9 @@
     "RoomID": 129,
     "Lock": [],
     "Weight": 0,
-    "Scaling": 0,
+    "Scaling": 1.5e-05,
     "Scaling Min": 4,
-    "Scaling Max": -1,
+    "Scaling Max": 30,
     "Layout": {
       "0,0": [
         0,
@@ -6642,9 +6642,9 @@
     "RoomID": 133,
     "Lock": [],
     "Weight": 0,
-    "Scaling": 0,
+    "Scaling": 1.5e-05,
     "Scaling Min": 4,
-    "Scaling Max": -1,
+    "Scaling Max": 30,
     "Layout": {
       "0,0": [
         2,
@@ -6720,9 +6720,9 @@
     "RoomID": 135,
     "Lock": [],
     "Weight": 0,
-    "Scaling": 0,
+    "Scaling": 1.5e-05,
     "Scaling Min": 4,
-    "Scaling Max": -1,
+    "Scaling Max": 30,
     "Layout": {
       "0,0": [
         2,
@@ -6739,9 +6739,9 @@
     "RoomID": 136,
     "Lock": [],
     "Weight": 0,
-    "Scaling": 0,
+    "Scaling": 1.5e-05,
     "Scaling Min": 4,
-    "Scaling Max": -1,
+    "Scaling Max": 30,
     "Layout": {
       "0,1": [
         1,
@@ -6774,9 +6774,9 @@
     "RoomID": 137,
     "Lock": [],
     "Weight": 0,
-    "Scaling": 0,
+    "Scaling": 1.5e-05,
     "Scaling Min": 4,
-    "Scaling Max": -1,
+    "Scaling Max": 30,
     "Layout": {
       "0,0": [
         2,
@@ -6793,9 +6793,9 @@
     "RoomID": 138,
     "Lock": [],
     "Weight": 0,
-    "Scaling": 0,
+    "Scaling": 1.5e-05,
     "Scaling Min": 4,
-    "Scaling Max": -1,
+    "Scaling Max": 30,
     "Layout": {
       "0,0": [
         0,
@@ -6882,9 +6882,9 @@
     "RoomID": 141,
     "Lock": [],
     "Weight": 0,
-    "Scaling": 0,
+    "Scaling": 1.5e-05,
     "Scaling Min": 4,
-    "Scaling Max": -1,
+    "Scaling Max": 30,
     "Layout": {
       "0,0": [
         2,
@@ -7049,9 +7049,9 @@
     "RoomID": 146,
     "Lock": [],
     "Weight": 0,
-    "Scaling": 0,
+    "Scaling": 1.5e-05,
     "Scaling Min": 4,
-    "Scaling Max": -1,
+    "Scaling Max": 30,
     "Layout": {
       "2,0": [
         2,
@@ -7224,9 +7224,9 @@
     "RoomID": 151,
     "Lock": [],
     "Weight": 0,
-    "Scaling": 0,
+    "Scaling": 1.5e-05,
     "Scaling Min": 4,
-    "Scaling Max": -1,
+    "Scaling Max": 30,
     "Layout": {
       "0,0": [
         0,
@@ -7364,9 +7364,9 @@
     "RoomID": 155,
     "Lock": [],
     "Weight": 0,
-    "Scaling": 0,
+    "Scaling": 1.5e-05,
     "Scaling Min": 4,
-    "Scaling Max": -1,
+    "Scaling Max": 30,
     "Layout": {
       "0,0": [
         1,
@@ -7383,9 +7383,9 @@
     "RoomID": 156,
     "Lock": [],
     "Weight": 0,
-    "Scaling": 0,
+    "Scaling": 1.5e-05,
     "Scaling Min": 4,
-    "Scaling Max": -1,
+    "Scaling Max": 30,
     "Layout": {
       "0,0": [
         0,
@@ -7525,9 +7525,9 @@
     "RoomID": 158,
     "Lock": [],
     "Weight": 0,
-    "Scaling": 0,
+    "Scaling": 1.5e-05,
     "Scaling Min": 4,
-    "Scaling Max": -1,
+    "Scaling Max": 30,
     "Layout": {
       "0,0": [
         0,
@@ -7552,9 +7552,9 @@
     "RoomID": 159,
     "Lock": [],
     "Weight": 0,
-    "Scaling": 0,
+    "Scaling": 1.5e-05,
     "Scaling Min": 4,
-    "Scaling Max": -1,
+    "Scaling Max": 30,
     "Layout": {
       "0,0": [
         0,
@@ -7606,9 +7606,9 @@
     "RoomID": 161,
     "Lock": [],
     "Weight": 0,
-    "Scaling": 0,
+    "Scaling": 1.5e-05,
     "Scaling Min": 4,
-    "Scaling Max": -1,
+    "Scaling Max": 30,
     "Layout": {
       "0,0": [
         2,
@@ -7735,9 +7735,9 @@
     "RoomID": 164,
     "Lock": [],
     "Weight": 0,
-    "Scaling": 0,
+    "Scaling": 1.5e-05,
     "Scaling Min": 4,
-    "Scaling Max": -1,
+    "Scaling Max": 30,
     "Layout": {
       "0,0": [
         2,
@@ -7770,9 +7770,9 @@
     "RoomID": 165,
     "Lock": [],
     "Weight": 0,
-    "Scaling": 0,
+    "Scaling": 1.5e-05,
     "Scaling Min": 4,
-    "Scaling Max": -1,
+    "Scaling Max": 30,
     "Layout": {
       "0,0": [
         1,
@@ -7918,9 +7918,9 @@
     "RoomID": 169,
     "Lock": [],
     "Weight": 0,
-    "Scaling": 0,
+    "Scaling": 1.5e-05,
     "Scaling Min": 4,
-    "Scaling Max": -1,
+    "Scaling Max": 30,
     "Layout": {
       "0,0": [
         0,
@@ -8063,9 +8063,9 @@
     "RoomID": 172,
     "Lock": [],
     "Weight": 0,
-    "Scaling": 0,
+    "Scaling": 1.5e-05,
     "Scaling Min": 4,
-    "Scaling Max": -1,
+    "Scaling Max": 30,
     "Layout": {
       "0,0": [
         1,
@@ -8254,9 +8254,9 @@
     "RoomID": 177,
     "Lock": [],
     "Weight": 0,
-    "Scaling": 0,
+    "Scaling": 1.5e-05,
     "Scaling Min": 4,
-    "Scaling Max": -1,
+    "Scaling Max": 30,
     "Layout": {
       "0,1": [
         1,
@@ -8375,9 +8375,9 @@
     "RoomID": 180,
     "Lock": [],
     "Weight": 0,
-    "Scaling": 0,
+    "Scaling": 1.5e-05,
     "Scaling Min": 4,
-    "Scaling Max": -1,
+    "Scaling Max": 30,
     "Layout": {
       "0,0": [
         1,
@@ -8788,9 +8788,9 @@
     "RoomID": 187,
     "Lock": [],
     "Weight": 0,
-    "Scaling": 0,
+    "Scaling": 1.5e-05,
     "Scaling Min": 4,
-    "Scaling Max": -1,
+    "Scaling Max": 30,
     "Layout": {
       "0,0": [
         0,
@@ -8815,9 +8815,9 @@
     "RoomID": 188,
     "Lock": [],
     "Weight": 0,
-    "Scaling": 0,
+    "Scaling": 1.5e-05,
     "Scaling Min": 4,
-    "Scaling Max": -1,
+    "Scaling Max": 30,
     "Layout": {
       "0,1": [
         1,
@@ -8893,9 +8893,9 @@
     "RoomID": 190,
     "Lock": [],
     "Weight": 0,
-    "Scaling": 0,
+    "Scaling": 1.5e-05,
     "Scaling Min": 4,
-    "Scaling Max": -1,
+    "Scaling Max": 30,
     "Layout": {
       "0,0": [
         1,
@@ -8912,9 +8912,9 @@
     "RoomID": 191,
     "Lock": [],
     "Weight": 0,
-    "Scaling": 0,
+    "Scaling": 1.5e-05,
     "Scaling Min": 4,
-    "Scaling Max": -1,
+    "Scaling Max": 30,
     "Layout": {
       "0,0": [
         0,
@@ -9201,9 +9201,9 @@
     "RoomID": 194,
     "Lock": [],
     "Weight": 0,
-    "Scaling": 0,
+    "Scaling": 1.5e-05,
     "Scaling Min": 4,
-    "Scaling Max": -1,
+    "Scaling Max": 30,
     "Layout": {
       "2,0": [
         2,
@@ -9279,9 +9279,9 @@
     "RoomID": 196,
     "Lock": [],
     "Weight": 0,
-    "Scaling": 0,
+    "Scaling": 1.5e-05,
     "Scaling Min": 4,
-    "Scaling Max": -1,
+    "Scaling Max": 30,
     "Layout": {
       "1,0": [
         2,
@@ -9589,9 +9589,9 @@
     "RoomID": 206,
     "Lock": [],
     "Weight": 0,
-    "Scaling": 0,
+    "Scaling": 1.5e-05,
     "Scaling Min": 4,
-    "Scaling Max": -1,
+    "Scaling Max": 30,
     "Layout": {
       "0,0": [
         2,
@@ -9643,9 +9643,9 @@
     "RoomID": 208,
     "Lock": [],
     "Weight": 0,
-    "Scaling": 0,
+    "Scaling": 1.5e-05,
     "Scaling Min": 4,
-    "Scaling Max": -1,
+    "Scaling Max": 30,
     "Layout": {
       "1,0": [
         0,
@@ -9713,9 +9713,9 @@
     "RoomID": 210,
     "Lock": [],
     "Weight": 0,
-    "Scaling": 0,
+    "Scaling": 1.5e-05,
     "Scaling Min": 4,
-    "Scaling Max": -1,
+    "Scaling Max": 30,
     "Layout": {
       "0,0": [
         2,
@@ -9794,9 +9794,9 @@
     "RoomID": 213,
     "Lock": [],
     "Weight": 0,
-    "Scaling": 0,
+    "Scaling": 1.5e-05,
     "Scaling Min": 4,
-    "Scaling Max": -1,
+    "Scaling Max": 30,
     "Layout": {
       "1,0": [
         2,
@@ -10187,9 +10187,9 @@
     "RoomID": 224,
     "Lock": [],
     "Weight": 0,
-    "Scaling": 0,
+    "Scaling": 1.5e-05,
     "Scaling Min": 4,
-    "Scaling Max": -1,
+    "Scaling Max": 30,
     "Layout": {
       "0,0": [
         2,
@@ -10330,9 +10330,9 @@
     "RoomID": 229,
     "Lock": [],
     "Weight": 0,
-    "Scaling": 0,
+    "Scaling": 1.5e-05,
     "Scaling Min": 4,
-    "Scaling Max": -1,
+    "Scaling Max": 30,
     "Layout": {
       "0,0": [
         0,
@@ -10357,9 +10357,9 @@
     "RoomID": 230,
     "Lock": [],
     "Weight": 0,
-    "Scaling": 0,
+    "Scaling": 1.5e-05,
     "Scaling Min": 4,
-    "Scaling Max": -1,
+    "Scaling Max": 30,
     "Layout": {
       "0,0": [
         0,
@@ -11702,9 +11702,9 @@
     "RoomID": 257,
     "Lock": [],
     "Weight": 0,
-    "Scaling": 0,
+    "Scaling": 1.5e-05,
     "Scaling Min": 4,
-    "Scaling Max": -1,
+    "Scaling Max": 30,
     "Layout": {
       "0,0": [
         1,
@@ -11796,9 +11796,9 @@
     "RoomID": 259,
     "Lock": [],
     "Weight": 0,
-    "Scaling": 0,
+    "Scaling": 1.5e-05,
     "Scaling Min": 4,
-    "Scaling Max": -1,
+    "Scaling Max": 30,
     "Layout": {
       "0,0": [
         1,
@@ -11815,9 +11815,9 @@
     "RoomID": 260,
     "Lock": [],
     "Weight": 0,
-    "Scaling": 0,
+    "Scaling": 1.5e-05,
     "Scaling Min": 4,
-    "Scaling Max": -1,
+    "Scaling Max": 30,
     "Layout": {
       "0,0": [
         1,
@@ -11904,9 +11904,9 @@
     "RoomID": 263,
     "Lock": [],
     "Weight": 0,
-    "Scaling": 0,
+    "Scaling": 1.5e-05,
     "Scaling Min": 4,
-    "Scaling Max": -1,
+    "Scaling Max": 30,
     "Layout": {
       "0,0": [
         2,
@@ -12055,9 +12055,9 @@
     "RoomID": 268,
     "Lock": [],
     "Weight": 0,
-    "Scaling": 0,
+    "Scaling": 1.5e-05,
     "Scaling Min": 4,
-    "Scaling Max": -1,
+    "Scaling Max": 30,
     "Layout": {
       "0,1": [
         0,
@@ -12098,9 +12098,9 @@
     "RoomID": 269,
     "Lock": [],
     "Weight": 0,
-    "Scaling": 0,
+    "Scaling": 1.5e-05,
     "Scaling Min": 4,
-    "Scaling Max": -1,
+    "Scaling Max": 30,
     "Layout": {
       "0,0": [
         2,
@@ -12294,9 +12294,9 @@
     "RoomID": 273,
     "Lock": [],
     "Weight": 0,
-    "Scaling": 0,
+    "Scaling": 1.5e-05,
     "Scaling Min": 4,
-    "Scaling Max": -1,
+    "Scaling Max": 30,
     "Layout": {
       "4,0": [
         1,
@@ -12442,9 +12442,9 @@
     "RoomID": 277,
     "Lock": [],
     "Weight": 0,
-    "Scaling": 0,
+    "Scaling": 1.5e-05,
     "Scaling Min": 4,
-    "Scaling Max": -1,
+    "Scaling Max": 30,
     "Layout": {
       "0,0": [
         0,
@@ -12469,9 +12469,9 @@
     "RoomID": 278,
     "Lock": [],
     "Weight": 0,
-    "Scaling": 0,
+    "Scaling": 1.5e-05,
     "Scaling Min": 4,
-    "Scaling Max": -1,
+    "Scaling Max": 30,
     "Layout": {
       "0,0": [
         1,
@@ -12633,9 +12633,9 @@
     "RoomID": 282,
     "Lock": [],
     "Weight": 0,
-    "Scaling": 0,
+    "Scaling": 1.5e-05,
     "Scaling Min": 4,
-    "Scaling Max": -1,
+    "Scaling Max": 30,
     "Layout": {
       "0,0": [
         1,
@@ -12652,9 +12652,9 @@
     "RoomID": 283,
     "Lock": [],
     "Weight": 0,
-    "Scaling": 0,
+    "Scaling": 1.5e-05,
     "Scaling Min": 4,
-    "Scaling Max": -1,
+    "Scaling Max": 30,
     "Layout": {
       "0,1": [
         1,
@@ -12854,9 +12854,9 @@
     "RoomID": 289,
     "Lock": [],
     "Weight": 0,
-    "Scaling": 0,
+    "Scaling": 1.5e-05,
     "Scaling Min": 4,
-    "Scaling Max": -1,
+    "Scaling Max": 30,
     "Layout": {
       "0,0": [
         0,
@@ -12983,9 +12983,9 @@
     "RoomID": 292,
     "Lock": [],
     "Weight": 0,
-    "Scaling": 0,
+    "Scaling": 1.5e-05,
     "Scaling Min": 4,
-    "Scaling Max": -1,
+    "Scaling Max": 30,
     "Layout": {
       "0,0": [
         2,
@@ -13200,9 +13200,9 @@
     "RoomID": 295,
     "Lock": [],
     "Weight": 0,
-    "Scaling": 0,
+    "Scaling": 1.5e-05,
     "Scaling Min": 4,
-    "Scaling Max": -1,
+    "Scaling Max": 30,
     "Layout": {
       "0,0": [
         2,
@@ -13335,9 +13335,9 @@
     "RoomID": 300,
     "Lock": [],
     "Weight": 0,
-    "Scaling": 0,
+    "Scaling": 1.5e-05,
     "Scaling Min": 4,
-    "Scaling Max": -1,
+    "Scaling Max": 30,
     "Layout": {
       "0,0": [
         2,
@@ -13432,9 +13432,9 @@
     "RoomID": 303,
     "Lock": [],
     "Weight": 0,
-    "Scaling": 0,
+    "Scaling": 1.5e-05,
     "Scaling Min": 4,
-    "Scaling Max": -1,
+    "Scaling Max": 30,
     "Layout": {
       "0,0": [
         2,
@@ -13717,9 +13717,9 @@
     "RoomID": 310,
     "Lock": [],
     "Weight": 0,
-    "Scaling": 0,
+    "Scaling": 1.5e-05,
     "Scaling Min": 4,
-    "Scaling Max": -1,
+    "Scaling Max": 30,
     "Layout": {
       "0,0": [
         1,
@@ -13736,9 +13736,9 @@
     "RoomID": 311,
     "Lock": [],
     "Weight": 0,
-    "Scaling": 0,
+    "Scaling": 1.5e-05,
     "Scaling Min": 4,
-    "Scaling Max": -1,
+    "Scaling Max": 30,
     "Layout": {
       "0,0": [
         1,
@@ -13997,9 +13997,9 @@
     "RoomID": 318,
     "Lock": [],
     "Weight": 0,
-    "Scaling": 0,
+    "Scaling": 1.5e-05,
     "Scaling Min": 4,
-    "Scaling Max": -1,
+    "Scaling Max": 30,
     "Layout": {
       "0,0": [
         0,
@@ -14169,9 +14169,9 @@
     "RoomID": 322,
     "Lock": [],
     "Weight": 0,
-    "Scaling": 0,
+    "Scaling": 1.5e-05,
     "Scaling Min": 4,
-    "Scaling Max": -1,
+    "Scaling Max": 30,
     "Layout": {
       "0,0": [
         2,
@@ -14519,9 +14519,9 @@
     "RoomID": 332,
     "Lock": [],
     "Weight": 0,
-    "Scaling": 0,
+    "Scaling": 1.5e-05,
     "Scaling Min": 4,
-    "Scaling Max": -1,
+    "Scaling Max": 30,
     "Layout": {
       "0,0": [
         0,
@@ -14680,9 +14680,9 @@
     "RoomID": 335,
     "Lock": [],
     "Weight": 0,
-    "Scaling": 0,
+    "Scaling": 1.5e-05,
     "Scaling Min": 4,
-    "Scaling Max": -1,
+    "Scaling Max": 30,
     "Layout": {
       "0,0": [
         1,
@@ -14833,9 +14833,9 @@
     "RoomID": 338,
     "Lock": [],
     "Weight": 0,
-    "Scaling": 0,
+    "Scaling": 1.5e-05,
     "Scaling Min": 4,
-    "Scaling Max": -1,
+    "Scaling Max": 30,
     "Layout": {
       "1,0": [
         2,
@@ -14903,9 +14903,9 @@
     "RoomID": 340,
     "Lock": [],
     "Weight": 0,
-    "Scaling": 0,
+    "Scaling": 1.5e-05,
     "Scaling Min": 4,
-    "Scaling Max": -1,
+    "Scaling Max": 30,
     "Layout": {
       "1,0": [
         2,
@@ -15048,9 +15048,9 @@
     "RoomID": 343,
     "Lock": [],
     "Weight": 0,
-    "Scaling": 0,
+    "Scaling": 1.5e-05,
     "Scaling Min": 4,
-    "Scaling Max": -1,
+    "Scaling Max": 30,
     "Layout": {
       "0,0": [
         0,
@@ -15276,9 +15276,9 @@
     "RoomID": 347,
     "Lock": [],
     "Weight": 0,
-    "Scaling": 0,
+    "Scaling": 1.5e-05,
     "Scaling Min": 4,
-    "Scaling Max": -1,
+    "Scaling Max": 30,
     "Layout": {
       "0,0": [
         2,
@@ -15572,9 +15572,9 @@
     "RoomID": 355,
     "Lock": [],
     "Weight": 0,
-    "Scaling": 0,
+    "Scaling": 1.5e-05,
     "Scaling Min": 4,
-    "Scaling Max": -1,
+    "Scaling Max": 30,
     "Layout": {
       "0,0": [
         0,
@@ -15978,9 +15978,9 @@
     "RoomID": 357,
     "Lock": [],
     "Weight": 0,
-    "Scaling": 0,
+    "Scaling": 1.5e-05,
     "Scaling Min": 4,
-    "Scaling Max": -1,
+    "Scaling Max": 30,
     "Layout": {
       "0,0": [
         1,
@@ -16113,9 +16113,9 @@
     "RoomID": 362,
     "Lock": [],
     "Weight": 0,
-    "Scaling": 0,
+    "Scaling": 1.5e-05,
     "Scaling Min": 4,
-    "Scaling Max": -1,
+    "Scaling Max": 30,
     "Layout": {
       "0,0": [
         0,
@@ -16334,9 +16334,9 @@
     "RoomID": 369,
     "Lock": [],
     "Weight": 0,
-    "Scaling": 0,
+    "Scaling": 1.5e-05,
     "Scaling Min": 4,
-    "Scaling Max": -1,
+    "Scaling Max": 30,
     "Layout": {
       "0,3": [
         1,
@@ -16377,9 +16377,9 @@
     "RoomID": 370,
     "Lock": [],
     "Weight": 0,
-    "Scaling": 0,
+    "Scaling": 1.5e-05,
     "Scaling Min": 4,
-    "Scaling Max": -1,
+    "Scaling Max": 30,
     "Layout": {
       "4,0": [
         1,
@@ -16498,9 +16498,9 @@
     "RoomID": 373,
     "Lock": [],
     "Weight": 0,
-    "Scaling": 0,
+    "Scaling": 1.5e-05,
     "Scaling Min": 4,
-    "Scaling Max": -1,
+    "Scaling Max": 30,
     "Layout": {
       "0,0": [
         0,
@@ -16769,9 +16769,9 @@
     "RoomID": 378,
     "Lock": [],
     "Weight": 0,
-    "Scaling": 0,
+    "Scaling": 1.5e-05,
     "Scaling Min": 4,
-    "Scaling Max": -1,
+    "Scaling Max": 30,
     "Layout": {
       "0,0": [
         0,
@@ -16804,9 +16804,9 @@
     "RoomID": 379,
     "Lock": [],
     "Weight": 0,
-    "Scaling": 0,
+    "Scaling": 1.5e-05,
     "Scaling Min": 4,
-    "Scaling Max": -1,
+    "Scaling Max": 30,
     "Layout": {
       "0,0": [
         1,
@@ -16939,9 +16939,9 @@
     "RoomID": 384,
     "Lock": [],
     "Weight": 0,
-    "Scaling": 0,
+    "Scaling": 1.5e-05,
     "Scaling Min": 4,
-    "Scaling Max": -1,
+    "Scaling Max": 30,
     "Layout": {
       "0,0": [
         1,
@@ -16958,9 +16958,9 @@
     "RoomID": 385,
     "Lock": [],
     "Weight": 0,
-    "Scaling": 0,
+    "Scaling": 1.5e-05,
     "Scaling Min": 4,
-    "Scaling Max": -1,
+    "Scaling Max": 30,
     "Layout": {
       "2,0": [
         2,
@@ -17039,9 +17039,9 @@
     "RoomID": 388,
     "Lock": [],
     "Weight": 0,
-    "Scaling": 0,
+    "Scaling": 1.5e-05,
     "Scaling Min": 4,
-    "Scaling Max": -1,
+    "Scaling Max": 30,
     "Layout": {
       "0,0": [
         0,
@@ -17139,9 +17139,9 @@
     "RoomID": 392,
     "Lock": [],
     "Weight": 0,
-    "Scaling": 0,
+    "Scaling": 1.5e-05,
     "Scaling Min": 4,
-    "Scaling Max": -1,
+    "Scaling Max": 30,
     "Layout": {
       "1,0": [
         0,
@@ -17255,9 +17255,9 @@
     "RoomID": 396,
     "Lock": [],
     "Weight": 0,
-    "Scaling": 0,
+    "Scaling": 1.5e-05,
     "Scaling Min": 4,
-    "Scaling Max": -1,
+    "Scaling Max": 30,
     "Layout": {
       "0,0": [
         2,
@@ -17333,9 +17333,9 @@
     "RoomID": 398,
     "Lock": [],
     "Weight": 0,
-    "Scaling": 0,
+    "Scaling": 1.5e-05,
     "Scaling Min": 4,
-    "Scaling Max": -1,
+    "Scaling Max": 30,
     "Layout": {
       "1,0": [
         2,
@@ -17360,9 +17360,9 @@
     "RoomID": 399,
     "Lock": [],
     "Weight": 0,
-    "Scaling": 0,
+    "Scaling": 1.5e-05,
     "Scaling Min": 4,
-    "Scaling Max": -1,
+    "Scaling Max": 30,
     "Layout": {
       "1,0": [
         2,
@@ -17387,9 +17387,9 @@
     "RoomID": 400,
     "Lock": [],
     "Weight": 0,
-    "Scaling": 0,
+    "Scaling": 1.5e-05,
     "Scaling Min": 4,
-    "Scaling Max": -1,
+    "Scaling Max": 30,
     "Layout": {
       "0,0": [
         1,
@@ -17452,9 +17452,9 @@
     "RoomID": 403,
     "Lock": [],
     "Weight": 0,
-    "Scaling": 0,
+    "Scaling": 1.5e-05,
     "Scaling Min": 4,
-    "Scaling Max": -1,
+    "Scaling Max": 30,
     "Layout": {
       "0,0": [
         1,
@@ -17471,9 +17471,9 @@
     "RoomID": 404,
     "Lock": [],
     "Weight": 0,
-    "Scaling": 0,
+    "Scaling": 1.5e-05,
     "Scaling Min": 4,
-    "Scaling Max": -1,
+    "Scaling Max": 30,
     "Layout": {
       "0,0": [
         1,
@@ -17509,9 +17509,9 @@
     "RoomID": 406,
     "Lock": [],
     "Weight": 0,
-    "Scaling": 0,
+    "Scaling": 1.5e-05,
     "Scaling Min": 4,
-    "Scaling Max": -1,
+    "Scaling Max": 30,
     "Layout": {
       "4,1": [
         2,
@@ -17568,9 +17568,9 @@
     "RoomID": 407,
     "Lock": [],
     "Weight": 0,
-    "Scaling": 0,
+    "Scaling": 1.5e-05,
     "Scaling Min": 4,
-    "Scaling Max": -1,
+    "Scaling Max": 30,
     "Layout": {
       "0,0": [
         0,
@@ -17627,9 +17627,9 @@
     "RoomID": 408,
     "Lock": [],
     "Weight": 0,
-    "Scaling": 0,
+    "Scaling": 1.5e-05,
     "Scaling Min": 4,
-    "Scaling Max": -1,
+    "Scaling Max": 30,
     "Layout": {
       "0,0": [
         0,
@@ -17705,9 +17705,9 @@
     "RoomID": 410,
     "Lock": [],
     "Weight": 0,
-    "Scaling": 0,
+    "Scaling": 1.5e-05,
     "Scaling Min": 4,
-    "Scaling Max": -1,
+    "Scaling Max": 30,
     "Layout": {
       "0,0": [
         0,
@@ -17751,9 +17751,9 @@
     "RoomID": 412,
     "Lock": [],
     "Weight": 0,
-    "Scaling": 0,
+    "Scaling": 1.5e-05,
     "Scaling Min": 4,
-    "Scaling Max": -1,
+    "Scaling Max": 30,
     "Layout": {
       "0,0": [
         0,
@@ -17837,9 +17837,9 @@
     "RoomID": 414,
     "Lock": [],
     "Weight": 0,
-    "Scaling": 0,
+    "Scaling": 1.5e-05,
     "Scaling Min": 4,
-    "Scaling Max": -1,
+    "Scaling Max": 30,
     "Layout": {
       "1,1": [
         1,
@@ -17939,9 +17939,9 @@
     "RoomID": 416,
     "Lock": [],
     "Weight": 0,
-    "Scaling": 0,
+    "Scaling": 1.5e-05,
     "Scaling Min": 4,
-    "Scaling Max": -1,
+    "Scaling Max": 30,
     "Layout": {
       "-1,1": [
         0,
@@ -18033,9 +18033,9 @@
     "RoomID": 418,
     "Lock": [],
     "Weight": 0,
-    "Scaling": 0,
+    "Scaling": 1.5e-05,
     "Scaling Min": 4,
-    "Scaling Max": -1,
+    "Scaling Max": 30,
     "Layout": {
       "0,0": [
         2,
@@ -18052,9 +18052,9 @@
     "RoomID": 419,
     "Lock": [],
     "Weight": 0,
-    "Scaling": 0,
+    "Scaling": 1.5e-05,
     "Scaling Min": 4,
-    "Scaling Max": -1,
+    "Scaling Max": 30,
     "Layout": {
       "0,0": [
         1,
@@ -18071,9 +18071,9 @@
     "RoomID": 420,
     "Lock": [],
     "Weight": 0,
-    "Scaling": 0,
+    "Scaling": 1.5e-05,
     "Scaling Min": 4,
-    "Scaling Max": -1,
+    "Scaling Max": 30,
     "Layout": {
       "0,0": [
         1,
@@ -18090,9 +18090,9 @@
     "RoomID": 421,
     "Lock": [],
     "Weight": 0,
-    "Scaling": 0,
+    "Scaling": 1.5e-05,
     "Scaling Min": 4,
-    "Scaling Max": -1,
+    "Scaling Max": 30,
     "Layout": {
       "0,0": [
         1,
@@ -18345,9 +18345,9 @@
     "RoomID": 434,
     "Lock": [],
     "Weight": 0,
-    "Scaling": 0,
+    "Scaling": 1.5e-05,
     "Scaling Min": 4,
-    "Scaling Max": -1,
+    "Scaling Max": 30,
     "Layout": {
       "0,0": [
         1,

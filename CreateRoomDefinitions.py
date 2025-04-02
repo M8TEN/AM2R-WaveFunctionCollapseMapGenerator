@@ -61,6 +61,9 @@ for room in rooms:
     room_as_dict["Weight"] = 0 if (num_of_doors <= 1) else 1.0/len(rooms)
     if len(layout) == 1 and num_of_doors > 1:
         room_as_dict["Weight"] = 0.00001
+    if num_of_doors <= 1:
+        room_as_dict["Scaling"] = 0.000015
+        room_as_dict["Scaling Max"] = 30
     out.append(room_as_dict)
     room_idx += 1
 
