@@ -337,7 +337,11 @@ if __name__ == "__main__":
             tiles_with_items = []
             possible_lock_states = inventory_to_lock_states(inv)
             generate(grid, next_pos, direction, 0)
-            success = True
+            placed_dead_ends = [e for e in placed_dead_ends if not e in tiles_with_items]
+            if len(placed_dead_ends) == 0:
+                print("No dead end for boss placement, rerolling..\n\n\n\n")
+            else:
+                success = True
         except:
             traceback.print_exc()
             print("Rerolling..\n\n\n\n")
