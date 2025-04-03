@@ -161,72 +161,78 @@ def draw_room(draw_begin: tuple, layout: dict, open_connections: list):
 # Recursively creates branches of rooms until the grid is fully populated or no more room can be placed
 def generate(grid: dict, next_tile: tuple, door_dir: int, depth: int = 0):
     global frames, max_recursion_depth_reached
-    frames += 1
-    max_recursion_depth_reached = max(max_recursion_depth_reached, depth)
-    possible_rooms = get_possible_rooms(door_dir, depth)
-    possible_connections = []
+    open_connections = [[next_tile, door_dir]]
+    open_depths = [depth]
+    while len(open_connections) > 0:
+        frames += 1
+        current_connection = open_connections.pop(0)
+        next_tile = current_connection[0]
+        door_dir = current_connection[1]
+        depth = open_depths.pop(0)
+        max_recursion_depth_reached = max(max_recursion_depth_reached, depth)
+        possible_rooms = get_possible_rooms(door_dir, depth)
+        possible_connections = []
 
-    for room in possible_rooms:
-        connection_points = start_positions(room["Layout"], door_dir)
-        # Iterate over every transition in the room. If the transition fits next to the one we are at and the room is valid, add it to the possibilities
-        allowed_connections = []
-        for connection in connection_points:
-            if validate_room_position(grid, next_tile, connection, room["Layout"]):
-                allowed_connections.append(connection)
-        possible_connections.append(allowed_connections)
-    
-    possible_rooms = [r for r in possible_rooms if len(possible_connections[possible_rooms.index(r)]) > 0]
-    possible_connections = [c for c in possible_connections if len(c) > 0]
-    # If no room fits, try fitting a dead end next to it to complete the branch
-    if len(possible_rooms) == 0:
-        if grid[next_tile]:
-            return
-        ends = deepcopy(dead_ends)
-        ends = [e for e in ends if has_door(e["Layout"], door_dir)]
-        valid_connections = []
-        for e in ends:
-            end_connections = []
-            entrances = start_positions(e["Layout"], door_dir)
-            for connection in entrances:
-                if validate_room_position(grid, next_tile, connection, e["Layout"]):
-                    end_connections.append(connection)
-            valid_connections.append(end_connections)
+        for room in possible_rooms:
+            connection_points = start_positions(room["Layout"], door_dir)
+            # Iterate over every transition in the room. If the transition fits next to the one we are at and the room is valid, add it to the possibilities
+            allowed_connections = []
+            for connection in connection_points:
+                if validate_room_position(grid, next_tile, connection, room["Layout"]):
+                    allowed_connections.append(connection)
+            possible_connections.append(allowed_connections)
         
-        ends = [e for e in ends if len(valid_connections[ends.index(e)]) > 0]
-        valid_connections = [c for c in valid_connections if len(c) > 0]
-        end_to_place_idx = randint(0, len(ends)-1)
-        end_chosen = ends[end_to_place_idx]
-        end_offset_str = valid_connections[end_to_place_idx][randint(0, len(valid_connections[end_to_place_idx])-1)]
-        end_offset = tuple(map(int, end_offset_str.split(",")))
-        draw_begin = (next_tile[0] - end_offset[0], next_tile[1] - end_offset[1])
-        draw_room(draw_begin, end_chosen["Layout"], [])
-        return
-
-    # Choose a random room from the list of possible rooms considering their respective weights
-    total_weights: float = 0.0
-    for room in possible_rooms:
-        total_weights += room_weight(room, depth)
-    choice = uniform(0, total_weights)
-    room_to_place_idx = 0
-    while (choice > 0):
-        choice -= room_weight(possible_rooms[room_to_place_idx], depth)
-        room_to_place_idx += 1
-    room_to_place_idx -= 1
-    room_chosen = possible_rooms[room_to_place_idx]
-    room_offset_str = possible_connections[room_to_place_idx][randint(0, len(possible_connections[room_to_place_idx])-1)]
-    room_offset = tuple(map(int, room_offset_str.split(",")))
-    draw_begin = (next_tile[0] - room_offset[0], next_tile[1] - room_offset[1])
-    open_connections = []
-    # Place the room in the grid
-    draw_room(draw_begin, room_chosen["Layout"], open_connections)
-    # If the setting UNIQUE_ROOMS is on, prevent the room from ever being placed again in this generation
-    if UNIQUE_ROOMS:
-        room_chosen["Scaling"] = 0
-        room_chosen["Weight"] = 0
-    
-    # Repeat the same function for every transition without corresponding connection
-    for connection in open_connections:
-        generate(grid, connection[0], connection[1], depth + 1)
+        possible_rooms = [r for r in possible_rooms if len(possible_connections[possible_rooms.index(r)]) > 0]
+        possible_connections = [c for c in possible_connections if len(c) > 0]
+        # If no room fits, try fitting a dead end next to it to complete the branch
+        if len(possible_rooms) == 0:
+            if grid[next_tile]:
+                continue
+            ends = deepcopy(dead_ends)
+            ends = [e for e in ends if has_door(e["Layout"], door_dir)]
+            valid_connections = []
+            for e in ends:
+                end_connections = []
+                entrances = start_positions(e["Layout"], door_dir)
+                for connection in entrances:
+                    if validate_room_position(grid, next_tile, connection, e["Layout"]):
+                        end_connections.append(connection)
+                valid_connections.append(end_connections)
+            
+            ends = [e for e in ends if len(valid_connections[ends.index(e)]) > 0]
+            valid_connections = [c for c in valid_connections if len(c) > 0]
+            end_to_place_idx = randint(0, len(ends)-1)
+            end_chosen = ends[end_to_place_idx]
+            end_offset_str = valid_connections[end_to_place_idx][randint(0, len(valid_connections[end_to_place_idx])-1)]
+            end_offset = tuple(map(int, end_offset_str.split(",")))
+            draw_begin = (next_tile[0] - end_offset[0], next_tile[1] - end_offset[1])
+            draw_room(draw_begin, end_chosen["Layout"], [])
+        else:
+            # Choose a random room from the list of possible rooms considering their respective weights
+            total_weights: float = 0.0
+            for room in possible_rooms:
+                total_weights += room_weight(room, depth)
+            choice = uniform(0, total_weights)
+            room_to_place_idx = 0
+            while (choice > 0):
+                choice -= room_weight(possible_rooms[room_to_place_idx], depth)
+                room_to_place_idx += 1
+            room_to_place_idx -= 1
+            room_chosen = possible_rooms[room_to_place_idx]
+            room_offset_str = possible_connections[room_to_place_idx][randint(0, len(possible_connections[room_to_place_idx])-1)]
+            room_offset = tuple(map(int, room_offset_str.split(",")))
+            draw_begin = (next_tile[0] - room_offset[0], next_tile[1] - room_offset[1])
+            new_connections = []
+            # Place the room in the grid
+            draw_room(draw_begin, room_chosen["Layout"], new_connections)
+            # If the setting UNIQUE_ROOMS is on, prevent the room from ever being placed again in this generation
+            if UNIQUE_ROOMS:
+                room_chosen["Scaling"] = 0
+                room_chosen["Weight"] = 0
+            
+            # Repeat the same function for every transition without corresponding connection
+            open_connections = new_connections + open_connections
+            open_depths = [depth+1]*len(new_connections) + open_depths
 
 # Calculates the weight of the room, scaling with distance (in rooms) to the start location
 def room_weight(room: dict, depth: int) -> float:
@@ -293,7 +299,7 @@ if __name__ == "__main__":
     #seed(100)
 
     # Read in the room data
-    with open("Test.json", "r") as file:
+    with open("Test.json", "r") as file: 
         room_data = json.load(file)
 
     # If we broke out of the generation because of an Exception, repeat until we got a valid floor
@@ -345,7 +351,7 @@ if __name__ == "__main__":
         except:
             traceback.print_exc()
             print("Rerolling..\n\n\n\n")
-
+    
     # Format output
     prototype_tile = {
         "color": 0,
