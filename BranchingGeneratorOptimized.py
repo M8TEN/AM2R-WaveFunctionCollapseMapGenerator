@@ -53,8 +53,16 @@ def has_door(layout: dict, door_dir: int) -> bool:
 
 # Returns a list of rooms filtered by their probability (weight) and if they have a door in the direction given
 def get_possible_rooms(door_dir: int, depth: int) -> list:
+    examine_list = rooms_with_door_right
+    if door_dir == 1:
+        examine_list = rooms_with_door_up
+    elif door_dir == 2:
+        examine_list = rooms_with_door_left
+    elif door_dir == 3:
+        examine_list = rooms_with_door_down
     # Remove rooms from consideration if the room has a weight of 0
-    possible_rooms = [r for r in room_data if (room_weight(r, depth) > 0)]
+    possible_rooms = [r for r in examine_list if (room_weight(room_data[r], depth) > 0)]
+    possible_rooms = list(map(lambda x: room_data[x], possible_rooms))
     idx = 0
     while idx < len(possible_rooms):
         room = possible_rooms[idx]
@@ -296,11 +304,28 @@ def inventory_to_lock_states(inventory: list) -> list:
 # START OF MAIN PROGRAM
 if __name__ == "__main__":
     start_time = time.time()
-    seed(100)
+    #seed(100)
 
     # Read in the room data
     with open("Test.json", "r") as file: 
         room_data = json.load(file)
+
+    rooms_with_door_right = []
+    rooms_with_door_up = []
+    rooms_with_door_left = []
+    rooms_with_door_down = []
+
+    for i in range(len(room_data)):
+        room = room_data[i]
+        if has_door(room["Layout"], 0):
+            rooms_with_door_right.append(i)
+        if has_door(room["Layout"], 1):
+            rooms_with_door_up.append(i)
+        if has_door(room["Layout"], 2):
+            rooms_with_door_left.append(i)
+        if has_door(room["Layout"], 3):
+            rooms_with_door_down.append(i)
+
 
     # If we broke out of the generation because of an Exception, repeat until we got a valid floor
     success = False
