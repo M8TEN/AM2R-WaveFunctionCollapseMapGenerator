@@ -1,4 +1,5 @@
 import json
+from math import inf
 from GroupTiles import create_tile_pos_dict, find_group
 
 RIGHT = 0
@@ -55,9 +56,18 @@ for i in range(len(rooms)):
     layout = {}
     door_tiles = [[], [], [], []]
     num_of_doors = 0
+    max_x = -inf
+    min_y = inf
+    max_y = -inf
     for tile in room:
         num_of_tiles += 1
-        key = f"{tile['x']-top_left[0]},{tile['y']-top_left[1]}"
+        tile_x = tile['x']-top_left[0]
+        tile_y = tile['y']-top_left[1]
+        min_x = min(min_x, tile_x)
+        max_x = max(max_x, tile_x)
+        min_y = min(min_y, tile_y)
+        max_y = max(max_y, tile_y)
+        key = f"{tile_x},{tile_y}"
         value = [tile["wallR"], tile["wallU"], tile["wallL"], tile["wallD"], (tile["special"] == 3 or tile["special"] == 4), []]
         if tile["wallR"] == 2:
             out["RightDoorRooms"].add(i)
@@ -78,6 +88,7 @@ for i in range(len(rooms)):
         layout[key] = value
     room_as_dict["Layout"] = layout
     room_as_dict["DoorTiles"] = door_tiles
+    room_as_dict["BoundingBox"] = [int(min_x), int(min_y), int(abs(max_x-min_x)), int(abs(max_y-min_y))]
     room_as_dict["IsDeadEnd"] = num_of_doors <= 1
     room_as_dict["Weight"] = 0 if (num_of_doors <= 1) else 1
     if len(layout) == 1 and num_of_doors > 1:

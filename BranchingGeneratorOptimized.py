@@ -25,11 +25,12 @@ DOWN = 3
 
 # Data Container class to hold information about a tile in the grid
 class Tile:
-    def __init__(self, r: int, u: int, l: int, d: int):
+    def __init__(self, r: int, u: int, l: int, d: int, room_id: int):
         self.r = r
         self.u = u
         self.l = l
         self.d = d
+        self.room_id = room_id
 
 # Returns a dict where coordinate tuples are the key and None is the value
 def create_grid(w: int, h: int) -> dict:
@@ -91,18 +92,31 @@ def start_positions(layout: dict, door_dir: int) -> list:
             positions.append(key)
     return positions
 
+# Bounding box is [origin_x, origin_y, size_x, size_y]
+def is_bounding_box_inside(origin_x: int, origin_y: int, size_x: int, size_y: int) -> bool:
+    return origin_x >= 0 and origin_y >= 0 and (origin_x + size_x) < WIDTH and (origin_y + size_y) < HEIGHT
+
 # Checks if a room can go next to another room
-def validate_room_position(grid: dict, global_start_pos: tuple, relative_key: str, layout: dict) -> bool:
+def validate_room_position(grid: dict, global_start_pos: tuple, relative_key: str, room: dict) -> bool:
+    layout = room["Layout"]
+    bounding_box = room["BoundingBox"]
     # Convert the key in the layout dict to a coordinate tuple
     relative_door_position = tuple(map(int, relative_key.split(",")))
     # The position where the room's relative origin tile is located globally
     draw_begin = (global_start_pos[0] - relative_door_position[0], global_start_pos[1] - relative_door_position[1])
+    if draw_begin[0] < 0:
+        breakpoint
+    if not is_bounding_box_inside(draw_begin[0] + bounding_box[0], draw_begin[1] + bounding_box[1], bounding_box[2], bounding_box[3]):
+        return False
+    
     for key in layout:
         # Convert tile's relative offset into global position
         relative_tile_pos = tuple(map(int, key.split(",")))
         global_tile_pos = (draw_begin[0] + relative_tile_pos[0], draw_begin[1] + relative_tile_pos[1])
+        if global_tile_pos[0] < 0: 
+            breakpoint
         # Room is invalid if it has tile out of bounds or if it overlaps another room or if it's on the edge and has a transition pointing out of bounds
-        if global_tile_pos[0] < 0 or global_tile_pos[0] >= WIDTH or global_tile_pos[1] < 0 or global_tile_pos[1] >= HEIGHT or grid[global_tile_pos] != None or\
+        if grid[global_tile_pos] != None or\
             (global_tile_pos[0] == 0 and layout[key][2] == 2) or (global_tile_pos[0] == WIDTH-1 and layout[key][0] == 2) or\
             (global_tile_pos[1] == 0 and layout[key][1] == 2) or (global_tile_pos[1] == HEIGHT-1 and layout[key][3] == 2):
             return False
@@ -142,14 +156,14 @@ def draw_room(draw_begin: tuple, room: dict, open_connections: list):
         tile_pos = tuple(map(int, key.split(",")))
         grid_pos = (draw_begin[0] + tile_pos[0], draw_begin[1] + tile_pos[1])
         tile_data = layout[key]
-        grid[grid_pos] = Tile(tile_data[0], tile_data[1], tile_data[2], tile_data[3])
-        if tile_data[0] == 2:
+        grid[grid_pos] = Tile(tile_data[0], tile_data[1], tile_data[2], tile_data[3], room["RoomID"])
+        if tile_data[0] == 2 and not grid[(grid_pos[0] + 1, grid_pos[1])]:
             open_connections.append([(grid_pos[0] + 1, grid_pos[1]), 2])
-        if tile_data[1] == 2:
+        if tile_data[1] == 2 and not grid[(grid_pos[0], grid_pos[1] - 1)]:
             open_connections.append([(grid_pos[0], grid_pos[1] - 1), 3])
-        if tile_data[2] == 2:
+        if tile_data[2] == 2 and not grid[(grid_pos[0] - 1, grid_pos[1])]:
             open_connections.append([(grid_pos[0] - 1, grid_pos[1]), 0])
-        if tile_data[3] == 2:
+        if tile_data[3] == 2 and not grid[(grid_pos[0], grid_pos[1] + 1)]:
             open_connections.append([(grid_pos[0], grid_pos[1] + 1), 1])
         # Get the item locks that lock an item location at a tile in the room
         items_locks = [l for l in possible_lock_states if l in layout[key][5]]
@@ -189,7 +203,7 @@ def generate(grid: dict, next_tile: tuple, door_dir: int, depth: int = 0):
             # Iterate over every transition in the room. If the transition fits next to the one we are at and the room is valid, add it to the possibilities
             allowed_connections = []
             for connection in connection_points:
-                if validate_room_position(grid, next_tile, connection, room["Layout"]):
+                if validate_room_position(grid, next_tile, connection, room):
                     allowed_connections.append(connection)
             possible_connections.append(allowed_connections)
         
@@ -205,7 +219,7 @@ def generate(grid: dict, next_tile: tuple, door_dir: int, depth: int = 0):
                 end_connections = []
                 entrances = e["DoorTiles"][door_dir]
                 for connection in entrances:
-                    if validate_room_position(grid, next_tile, connection, e["Layout"]):
+                    if validate_room_position(grid, next_tile, connection, e):
                         end_connections.append(connection)
                 valid_connections.append(end_connections)
             
@@ -235,6 +249,7 @@ def generate(grid: dict, next_tile: tuple, door_dir: int, depth: int = 0):
             new_connections = []
             # Place the room in the grid
             draw_room(draw_begin, room_chosen, new_connections)
+
             # If the setting UNIQUE_ROOMS is on, prevent the room from ever being placed again in this generation
             if UNIQUE_ROOMS:
                 room_chosen["Scaling"] = 0
@@ -329,13 +344,13 @@ if __name__ == "__main__":
             start_pos = (randint(0, WIDTH-1), randint(0, HEIGHT-1))
 
             if start_pos[0] == 0:
-                possible_start_tiles = [Tile(2, 1, 1, 1)]
+                possible_start_tiles = [Tile(2, 1, 1, 1, -1)]
             elif start_pos[0] == WIDTH-1:
-                possible_start_tiles = [Tile(1, 1, 2, 1)]
+                possible_start_tiles = [Tile(1, 1, 2, 1, -1)]
             else:
                 possible_start_tiles = [
-                Tile(2, 1, 1, 1),
-                Tile(1, 1, 2, 1),
+                Tile(2, 1, 1, 1, -1),
+                Tile(1, 1, 2, 1, -1),
             ]
 
             start_tile = possible_start_tiles[randint(0, len(possible_start_tiles)-1)]
