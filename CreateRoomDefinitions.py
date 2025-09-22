@@ -1,6 +1,11 @@
 import json
 from GroupTiles import create_tile_pos_dict, find_group
 
+RIGHT = 0
+UP = 1
+LEFT = 2
+DOWN = 3
+
 def top_left_corner(room: list) -> tuple:
     origin_tile = room[0]
     origin_pos = (origin_tile["x"], origin_tile["y"])
@@ -26,11 +31,18 @@ while len(tile_data) > 0:
 
 print(f"Found {len(rooms)} rooms")
 
-out = []
+out = {
+    "AllRooms": [],
+    "RightDoorRooms": set(),
+    "UpDoorRooms": set(),
+    "LeftDoorRooms": set(),
+    "DownDoorRooms": set()
+    }
 num_of_tiles = 0
 room_idx = 0
 
-for room in rooms:
+for i in range(len(rooms)):
+    room = rooms[i]
     room_as_dict = {
         "RoomID": room_idx,
         "Lock": [],
@@ -41,21 +53,31 @@ for room in rooms:
     }
     top_left: tuple = top_left_corner(room)
     layout = {}
+    door_tiles = [[], [], [], []]
     num_of_doors = 0
     for tile in room:
         num_of_tiles += 1
         key = f"{tile['x']-top_left[0]},{tile['y']-top_left[1]}"
         value = [tile["wallR"], tile["wallU"], tile["wallL"], tile["wallD"], (tile["special"] == 3 or tile["special"] == 4), []]
         if tile["wallR"] == 2:
+            out["RightDoorRooms"].add(i)
+            door_tiles[RIGHT].append(key)
             num_of_doors += 1
         if tile["wallU"] == 2:
+            out["UpDoorRooms"].add(i)
+            door_tiles[UP].append(key)
             num_of_doors += 1
         if tile["wallL"] == 2:
+            out["LeftDoorRooms"].add(i)
+            door_tiles[LEFT].append(key)
             num_of_doors += 1
         if tile["wallD"] == 2:
+            out["DownDoorRooms"].add(i)
+            door_tiles[DOWN].append(key)
             num_of_doors += 1
         layout[key] = value
     room_as_dict["Layout"] = layout
+    room_as_dict["DoorTiles"] = door_tiles
     room_as_dict["IsDeadEnd"] = num_of_doors <= 1
     room_as_dict["Weight"] = 0 if (num_of_doors <= 1) else 1
     if len(layout) == 1 and num_of_doors > 1:
@@ -65,10 +87,15 @@ for room in rooms:
         room_as_dict["Scaling Max"] = 30
     else:
         room_as_dict["Weight"] *= num_of_doors
-    out.append(room_as_dict)
+    out["AllRooms"].append(room_as_dict)
     room_idx += 1
 
 print(f"Processed {num_of_tiles} tiles")
 
-with open("Test.json", "w") as file:
+out["RightDoorRooms"] = list(out["RightDoorRooms"])
+out["UpDoorRooms"] = list(out["UpDoorRooms"])
+out["LeftDoorRooms"] = list(out["LeftDoorRooms"])
+out["DownDoorRooms"] = list(out["DownDoorRooms"])
+
+with open("SortedRoomsTest.json", "w") as file:
     json.dump(out, file, indent=2)

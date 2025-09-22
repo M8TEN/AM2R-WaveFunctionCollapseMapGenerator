@@ -17,6 +17,12 @@ START = (3,3) # Coordinate of the top-left corner in the output space
 MAJOR_NAMES = ["Bombs", "Power Grip", "Spider Ball", "Spring Ball", "Hi-Jump", "Varia Suit", "Space Jump", "Speedbooster", "Screw Attack", "Gravity Suit",
                 "Charge Beam", "Ice Beam", "Wave Beam", "Spazer", "Plasma Beam", "Flash Shift", "Scan Pulse", "Shotgun Missiles", "Reserve Tank", "Lightning Armor", "Power Spark"]
 
+# Door directions
+RIGHT = 0
+UP = 1
+LEFT = 2
+DOWN = 3
+
 # Data Container class to hold information about a tile in the grid
 class Tile:
     def __init__(self, r: int, u: int, l: int, d: int):
@@ -44,12 +50,8 @@ def get_dead_ends(data: list) -> list:
     return dead_ends
 
 # Returns true if the room has a door that points in the direction of door_dir. door_dir is an index into the layout tile's data
-def has_door(layout: dict, door_dir: int) -> bool:
-    for tile in layout.values():
-        if tile[door_dir] == 2:
-            return True
-    
-    return False
+def has_door(door_tiles_arr: list, door_dir: int) -> bool:
+    return len(door_tiles_arr[door_dir]) > 0
 
 # Returns a list of rooms filtered by their probability (weight) and if they have a door in the direction given
 def get_possible_rooms(door_dir: int, depth: int) -> list:
@@ -73,7 +75,7 @@ def get_possible_rooms(door_dir: int, depth: int) -> list:
                 is_locked = True
                 break
         # Remove room from possibilities if it does not have a door in the correct direction or if it is locked behind an item
-        if not has_door(room["Layout"], door_dir) or is_locked:
+        if is_locked:
             del possible_rooms[idx]
             continue
         else:
@@ -133,8 +135,9 @@ def validate_room_position(grid: dict, global_start_pos: tuple, relative_key: st
     return True
 
 # Writes the tile data into the grid
-def draw_room(draw_begin: tuple, layout: dict, open_connections: list):
+def draw_room(draw_begin: tuple, room: dict, open_connections: list):
     global possible_lock_states, tiles_with_items
+    layout = room["Layout"]
     for key in layout:
         tile_pos = tuple(map(int, key.split(",")))
         grid_pos = (draw_begin[0] + tile_pos[0], draw_begin[1] + tile_pos[1])
@@ -163,7 +166,7 @@ def draw_room(draw_begin: tuple, layout: dict, open_connections: list):
             print(f"Placed {MAJOR_NAMES[major]} (ID {major}) in Tile {grid_pos}")
     
     # Mark the room as a single tile big dead end if it is one for boss placement later
-    if len(layout) == 1 and (int(has_door(layout, 0)) + int(has_door(layout, 1)) + int(has_door(layout, 2)) + int(has_door(layout, 3)) == 1):
+    if len(layout) == 1 and (int(has_door(room["DoorTiles"], 0)) + int(has_door(room["DoorTiles"], 1)) + int(has_door(room["DoorTiles"], 2)) + int(has_door(room["DoorTiles"], 3)) == 1):
         placed_dead_ends.append(draw_begin)
 
 # Recursively creates branches of rooms until the grid is fully populated or no more room can be placed
@@ -182,7 +185,7 @@ def generate(grid: dict, next_tile: tuple, door_dir: int, depth: int = 0):
         possible_connections = []
 
         for room in possible_rooms:
-            connection_points = start_positions(room["Layout"], door_dir)
+            connection_points = room["DoorTiles"][door_dir]
             # Iterate over every transition in the room. If the transition fits next to the one we are at and the room is valid, add it to the possibilities
             allowed_connections = []
             for connection in connection_points:
@@ -196,12 +199,11 @@ def generate(grid: dict, next_tile: tuple, door_dir: int, depth: int = 0):
         if len(possible_rooms) == 0:
             if grid[next_tile]:
                 continue
-            ends = deepcopy(dead_ends)
-            ends = [e for e in ends if has_door(e["Layout"], door_dir)]
+            ends = [e for e in dead_ends if has_door(e["DoorTiles"], door_dir)]
             valid_connections = []
             for e in ends:
                 end_connections = []
-                entrances = start_positions(e["Layout"], door_dir)
+                entrances = e["DoorTiles"][door_dir]
                 for connection in entrances:
                     if validate_room_position(grid, next_tile, connection, e["Layout"]):
                         end_connections.append(connection)
@@ -214,7 +216,7 @@ def generate(grid: dict, next_tile: tuple, door_dir: int, depth: int = 0):
             end_offset_str = valid_connections[end_to_place_idx][randint(0, len(valid_connections[end_to_place_idx])-1)]
             end_offset = tuple(map(int, end_offset_str.split(",")))
             draw_begin = (next_tile[0] - end_offset[0], next_tile[1] - end_offset[1])
-            draw_room(draw_begin, end_chosen["Layout"], [])
+            draw_room(draw_begin, end_chosen, [])
         else:
             # Choose a random room from the list of possible rooms considering their respective weights
             total_weights: float = 0.0
@@ -232,7 +234,7 @@ def generate(grid: dict, next_tile: tuple, door_dir: int, depth: int = 0):
             draw_begin = (next_tile[0] - room_offset[0], next_tile[1] - room_offset[1])
             new_connections = []
             # Place the room in the grid
-            draw_room(draw_begin, room_chosen["Layout"], new_connections)
+            draw_room(draw_begin, room_chosen, new_connections)
             # If the setting UNIQUE_ROOMS is on, prevent the room from ever being placed again in this generation
             if UNIQUE_ROOMS:
                 room_chosen["Scaling"] = 0
@@ -304,27 +306,16 @@ def inventory_to_lock_states(inventory: list) -> list:
 # START OF MAIN PROGRAM
 if __name__ == "__main__":
     start_time = time.time()
-    #seed(100)
+    seed(100)
 
     # Read in the room data
-    with open("Test.json", "r") as file: 
-        room_data = json.load(file)
-
-    rooms_with_door_right = []
-    rooms_with_door_up = []
-    rooms_with_door_left = []
-    rooms_with_door_down = []
-
-    for i in range(len(room_data)):
-        room = room_data[i]
-        if has_door(room["Layout"], 0):
-            rooms_with_door_right.append(i)
-        if has_door(room["Layout"], 1):
-            rooms_with_door_up.append(i)
-        if has_door(room["Layout"], 2):
-            rooms_with_door_left.append(i)
-        if has_door(room["Layout"], 3):
-            rooms_with_door_down.append(i)
+    with open("SortedRoomsTest.json", "r") as file:
+        complete_json_data = json.load(file)
+        room_data = complete_json_data["AllRooms"]
+        rooms_with_door_right = complete_json_data["RightDoorRooms"]
+        rooms_with_door_up = complete_json_data["UpDoorRooms"]
+        rooms_with_door_left = complete_json_data["LeftDoorRooms"]
+        rooms_with_door_down = complete_json_data["DownDoorRooms"]
 
 
     # If we broke out of the generation because of an Exception, repeat until we got a valid floor
@@ -373,6 +364,8 @@ if __name__ == "__main__":
                 print("No dead end for boss placement, rerolling..\n\n\n\n")
             else:
                 success = True
+        except KeyboardInterrupt:
+            exit(1)
         except:
             traceback.print_exc()
             print("Rerolling..\n\n\n\n")
