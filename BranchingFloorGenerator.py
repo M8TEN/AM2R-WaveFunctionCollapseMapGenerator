@@ -296,10 +296,10 @@ def inventory_to_lock_states(inventory: list) -> list:
 # START OF MAIN PROGRAM
 if __name__ == "__main__":
     start_time = time.time()
-    seed(100)
+    seed(56)
 
     # Read in the room data
-    with open("Test.json", "r") as file: 
+    with open("Test.json", "r") as file:
         room_data = json.load(file)
 
     # If we broke out of the generation because of an Exception, repeat until we got a valid floor

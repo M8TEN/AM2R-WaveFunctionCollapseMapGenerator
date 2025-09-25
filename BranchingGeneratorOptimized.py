@@ -399,6 +399,7 @@ if __name__ == "__main__":
         "y": 0
     }
 
+    map_init_strings = [WIDTH, HEIGHT]
     out = []
     placed_dead_ends = [e for e in placed_dead_ends if not e in tiles_with_items]
     try:
@@ -409,6 +410,7 @@ if __name__ == "__main__":
 
     for position in grid:
         if grid[position] != None:
+            map_string = f"{grid[position].u}{grid[position].r}{grid[position].d}{grid[position].l}1"
             new_tile = deepcopy(prototype_tile)
             new_tile["wallL"] = grid[position].l
             new_tile["wallU"] = grid[position].u
@@ -418,14 +420,26 @@ if __name__ == "__main__":
             new_tile["y"] = position[1] + START[1]
             if position == start_pos:
                 new_tile["special"] = 1
-            if position in tiles_with_items:
+                map_string += "1"
+            elif position in tiles_with_items:
                 new_tile["special"] = 3
-            if position == boss_tile:
+                map_string += "3"
+            elif position == boss_tile:
                 new_tile["special"] = 4
+                map_string += "4"
+            else:
+                map_string += "0"
+            map_string += "0"
             out.append(new_tile)
+            map_init_strings.append(map_string)
+        else:
+            map_init_strings.append("0")
 
     with open("BranchingOutput.json", "w") as file:
         json.dump(out, file, indent=2)
+
+    with open("MapDataTest.json", "w") as file:
+        json.dump(map_init_strings, file)
 
     print(f"Execution time: {(time.time() - start_time)}s")
     print(f"{frames} iterations through generate()")

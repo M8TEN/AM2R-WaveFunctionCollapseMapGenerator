@@ -17,7 +17,7 @@ def top_left_corner(room: list) -> tuple:
             origin_pos = tile_pos
     return origin_pos
 
-with open("Inputs/ThisMightBreak.json", "r") as file:
+with open("Inputs/EL_Test.json", "r") as file:
     tile_data = json.load(file)
 
 tile_pos_dict = create_tile_pos_dict(tile_data)
@@ -56,6 +56,7 @@ for i in range(len(rooms)):
     layout = {}
     door_tiles = [[], [], [], []]
     num_of_doors = 0
+    min_x = inf
     max_x = -inf
     min_y = inf
     max_y = -inf
@@ -108,5 +109,5 @@ out["UpDoorRooms"] = list(out["UpDoorRooms"])
 out["LeftDoorRooms"] = list(out["LeftDoorRooms"])
 out["DownDoorRooms"] = list(out["DownDoorRooms"])
 
-with open("SortedRoomsTest.json", "w") as file:
+with open("EL_Sorted_Test.json", "w") as file:
     json.dump(out, file, indent=2)
