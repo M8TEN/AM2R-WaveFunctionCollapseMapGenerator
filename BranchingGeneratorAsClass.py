@@ -15,8 +15,21 @@ except ValueError:
 UNIQUE_ROOMS = False
 START = (3,3) # Coordinate of the top-left corner in the output space
 # Names of the Major items. Used for printing item placements
-MAJOR_NAMES = ["Bombs", "Power Grip", "Spider Ball", "Spring Ball", "Hi-Jump", "Varia Suit", "Space Jump", "Speedbooster", "Screw Attack", "Gravity Suit",
-                "Charge Beam", "Ice Beam", "Wave Beam", "Spazer", "Plasma Beam", "Flash Shift", "Scan Pulse", "Shotgun Missiles", "Reserve Tank", "Lightning Armor", "Power Spark"]
+ITEM_NAME_MAPPING = {
+    450: "Bombs",
+    452: "Spider Ball",
+    453: "Spring Ball",
+    454: "Hi Jump",
+    455: "Varia Suit",
+    456: "Space Jump",
+    457: "Speed Booster",
+    458: "Screw Attack",
+    459: "Gravity Suit",
+    461: "Ice Beam",
+    754: "Missile Tank",
+    801: "Super Missile Tank",
+    824: "Power Bomb Tank"
+}
 
 # Door directions
 RIGHT = 0
@@ -48,8 +61,8 @@ class FloorGenerator:
         self.grid = self.create_grid(width, height)
         self.dead_ends = self.get_dead_ends(self.room_data)
         self.placed_dead_ends = []
-        self.inv = [0,1] + [0]*19
-        self.possible_majors = [m for m in list(range(21)) if self.inv[m] == 0]
+        self.inv = []
+        self.possible_majors = [m for m in ITEM_NAME_MAPPING.keys() if not m in self.inv]
         self.tiles_with_items = []
         self.possible_lock_states = self.inventory_to_lock_states(self.inv)
         self.start_pos = (0,0)
@@ -258,13 +271,13 @@ class FloorGenerator:
             if chance >= 0.8:
                 # Select a random major item to be placed at the tile
                 major = self.possible_majors.pop(randint(0, len(self.possible_majors)-1))
-                self.inv[major] = 1
+                self.inv.append(major)
                 # Consider the item to be collected for the rest of the generation
-                self.possible_lock_states += self.unlocked_states(major, self.inv)
+                self.possible_lock_states = self.inventory_to_lock_states(self.inv)
                 self.tiles_with_items.append(grid_pos)
                 item_key: str = f"{self.layout_id}_{bounding_box_offset[0]}_{bounding_box_offset[1]}"
                 self.item_data[item_key] = major
-                print(f"Placed {MAJOR_NAMES[major]} (ID {major}) in Tile {grid_pos}")
+                print(f"Placed {ITEM_NAME_MAPPING[major]} (ID {major}) in Tile {grid_pos}")
         
         # Mark the room as a single tile big dead end if it is one for boss placement later
         if (len(layout)) == 1:
@@ -375,48 +388,43 @@ class FloorGenerator:
     # Returns list of item lock states that are unlocked by item_id
     def unlocked_states(self, item_id: int, inventory: list) -> list:
         match item_id:
-            case 0: #Bombs
-                return [0,9,12,13,14,15,16,17,18,19,27,33,35]
-            case 2: #Spider ball
-                return [9,10,11,12,15,16]
-            case 3: #Spring ball
-                if inventory[7] == 1:
-                    return [5]
+            case 450: #Bombs
+                return [0,9,10,14]
+            case 452: #Spider ball
+                return [7,8,9]
+            case 453: #Spring ball
+                if 457 in self.inv: # If speedbooster in inventory
+                    return [4]
                 else:
                     return []
-            case 4: #Hi-Jump
-                return [12,13,14]
-            case 5: #Varia
-                return [24]
-            case 6: #Space Jump
-                space_states = [15,16,17,18,19]
-                if inventory[7] == 1:
-                    space_states.append(6)
-                return space_states
-            case 7: #Speedbooster
-                return [4,5,33,34]
-            case 8: #Screw Attack
-                return [7]
-            case 9: #Gravity
-                return [23,25,26]
-            case 11: #Ice Beam
-                return [29]
-            case 12: #Wave Beam
-                return [20,21,22]
-            case 20: #Power Spark
-                return [3,4,5,15,16,17,18]
+            case 454: #Hi-Jump
+                return [9,10]
+            case 455: #Varia
+                return [13]
+            case 456: #Space Jump
+                return [7,9,10,11]
+            case 457: #Speedbooster
+                return [3]
+            case 458: #Screw Attack
+                return [5]
+            case 459: #Gravity
+                return [12]
+            case 461: #Ice Beam
+                return [16]
+            case 754: #Missile Tank
+                return [1,14,15]
+            case 801: #Super Missile Tank
+                return [1,2,14,15]
+            case 824: #Power Bomb Tank
+                return [0,6]
             case _:
                 return []
 
     # Maps an inventory loadout to possible room lock states        
     def inventory_to_lock_states(self, inventory: list) -> list:
         states = []
-        for idx in range(len(inventory)):
-            is_collected = inventory[idx] == 1
-            if not is_collected:
-                continue
-            states += self.unlocked_states(idx, inventory)
-            
+        for unlocked_item_id in inventory:
+            states += self.unlocked_states(unlocked_item_id, inventory)
         
         return list(set(states))
     
