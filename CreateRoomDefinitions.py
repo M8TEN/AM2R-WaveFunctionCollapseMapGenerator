@@ -40,7 +40,7 @@ out = {
     "DownDoorRooms": set()
     }
 num_of_tiles = 0
-room_idx = 0
+room_idx = 395
 
 for i in range(len(rooms)):
     room = rooms[i]

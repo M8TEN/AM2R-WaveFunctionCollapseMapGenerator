@@ -5,12 +5,8 @@ from copy import deepcopy
 from random import randint, uniform, seed
 import sys
 
-try:
-    WIDTH = min(74, abs(int(input("How many tiles wide should the map be? ")))) # Width of the map to generate. Maximum is 74
-    HEIGHT = min(57, abs(int(input("How many tiles high should the map be? ")))) # Height of the map to generate. Maximum is 57
-except ValueError:
-    print("Input must be single integer")
-    exit(1)
+frames = 0
+max_recursion_depth_reached = 0
 
 UNIQUE_ROOMS = False
 START = (3,3) # Coordinate of the top-left corner in the output space
@@ -49,7 +45,7 @@ class Tile:
         self.bounding_box_offset = bounding_box_offset
 
 class FloorGenerator:
-    def __init__(self, width: int, height: int, room_data_file_path: str):
+    def __init__(self, width: int, height: int, room_data_file_path: str, start_inventory: list):
         self.width = width
         self.height = height
         self.room_data = []
@@ -61,7 +57,7 @@ class FloorGenerator:
         self.grid = self.create_grid(width, height)
         self.dead_ends = self.get_dead_ends(self.room_data)
         self.placed_dead_ends = []
-        self.inv = []
+        self.inv = start_inventory
         self.possible_majors = [m for m in ITEM_NAME_MAPPING.keys() if not m in self.inv]
         self.tiles_with_items = []
         self.possible_lock_states = self.inventory_to_lock_states(self.inv)
@@ -268,7 +264,7 @@ class FloorGenerator:
             # Chance to place an item onto the tile. If the tile can't have an item or if it can hold an item but the location is locked
             # or there are no more major items to place, chance will be 0
             chance = uniform(0,1) * int(layout[key][4]) * int(len(self.possible_majors) > 0) * int(len(items_locks) == len(layout[key][5]))
-            if chance >= 0.8:
+            if chance >= 0.9:
                 # Select a random major item to be placed at the tile
                 major = self.possible_majors.pop(randint(0, len(self.possible_majors)-1))
                 self.inv.append(major)
@@ -393,7 +389,7 @@ class FloorGenerator:
             case 452: #Spider ball
                 return [7,8,9]
             case 453: #Spring ball
-                if 457 in self.inv: # If speedbooster in inventory
+                if 457 in inventory: # If speedbooster in inventory
                     return [4]
                 else:
                     return []
@@ -411,11 +407,11 @@ class FloorGenerator:
                 return [12]
             case 461: #Ice Beam
                 return [16]
-            case 754: #Missile Tank
+            case 925: #Missile Tank
                 return [1,14,15]
-            case 801: #Super Missile Tank
+            case 926: #Super Missile Tank
                 return [1,2,14,15]
-            case 824: #Power Bomb Tank
+            case 927: #Power Bomb Tank
                 return [0,6]
             case _:
                 return []
@@ -454,6 +450,12 @@ class FloorGenerator:
     
 # START OF MAIN PROGRAM
 if __name__ == "__main__":
+    try:
+        WIDTH = min(74, abs(int(input("How many tiles wide should the map be? ")))) # Width of the map to generate. Maximum is 74
+        HEIGHT = min(57, abs(int(input("How many tiles high should the map be? ")))) # Height of the map to generate. Maximum is 57
+    except ValueError:
+        print("Input must be single integer")
+        exit(1)
     start_time = time.time()
     if len(sys.argv) > 1:
         try:
@@ -469,7 +471,7 @@ if __name__ == "__main__":
     while not success:
         frames = 0
         max_recursion_depth_reached = 0
-        generator = FloorGenerator(WIDTH, HEIGHT, "Original_EL_Sorted_Test.json")
+        generator = FloorGenerator(WIDTH, HEIGHT, "Original_EL_Sorted_Test.json", [])
         try:
             success = generator.generate_floor()
         except KeyboardInterrupt:
@@ -537,7 +539,8 @@ if __name__ == "__main__":
         "RoomData": room_data,
         "TransitionData": transition_data,
         "MapData": map_init_strings,
-        "ItemData": generator.item_data
+        "ItemData": generator.item_data,
+        "BossData": grid[boss_tile].layout_id
     }
 
     with open("PackageTest.json", "w") as file:
