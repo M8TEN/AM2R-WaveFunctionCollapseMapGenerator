@@ -26,9 +26,9 @@ ITEM_NAME_MAPPING = {
     458: "Screw Attack",
     459: "Gravity Suit",
     461: "Ice Beam",
-    754: "Missile Tank",
-    801: "Super Missile Tank",
-    824: "Power Bomb Tank"
+    925: "Missile Tank",
+    926: "Super Missile Tank",
+    927: "Power Bomb Tank"
 }
 
 # Door directions
