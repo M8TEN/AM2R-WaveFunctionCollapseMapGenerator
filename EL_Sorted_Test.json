@@ -1305,6 +1305,144 @@
         0
       ],
       "IsDeadEnd": false
+    },
+    {
+      "RoomID": 425,
+      "Lock": [],
+      "Weight": 3,
+      "Scaling": 0,
+      "Scaling Min": 4,
+      "Scaling Max": -1,
+      "Layout": {
+        "0,0": [
+          1,
+          1,
+          2,
+          0,
+          true,
+          []
+        ],
+        "0,1": [
+          2,
+          0,
+          2,
+          1,
+          false,
+          []
+        ]
+      },
+      "DoorTiles": [
+        [
+          "0,1"
+        ],
+        [],
+        [
+          "0,0",
+          "0,1"
+        ],
+        []
+      ],
+      "BoundingBox": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "IsDeadEnd": false
+    },
+    {
+      "RoomID": 426,
+      "Lock": [],
+      "Weight": 2,
+      "Scaling": 0,
+      "Scaling Min": 4,
+      "Scaling Max": -1,
+      "Layout": {
+        "0,0": [
+          0,
+          1,
+          2,
+          1,
+          true,
+          []
+        ],
+        "1,0": [
+          2,
+          1,
+          0,
+          1,
+          true,
+          []
+        ]
+      },
+      "DoorTiles": [
+        [
+          "1,0"
+        ],
+        [],
+        [
+          "0,0"
+        ],
+        []
+      ],
+      "BoundingBox": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "IsDeadEnd": false
+    },
+    {
+      "RoomID": 427,
+      "Lock": [],
+      "Weight": 2,
+      "Scaling": 0,
+      "Scaling Min": 4,
+      "Scaling Max": -1,
+      "Layout": {
+        "0,0": [
+          0,
+          1,
+          2,
+          1,
+          true,
+          []
+        ],
+        "1,0": [
+          0,
+          1,
+          0,
+          2,
+          false,
+          []
+        ],
+        "2,0": [
+          1,
+          1,
+          0,
+          1,
+          true,
+          []
+        ]
+      },
+      "DoorTiles": [
+        [],
+        [],
+        [
+          "0,0"
+        ],
+        [
+          "1,0"
+        ]
+      ],
+      "BoundingBox": [
+        0,
+        0,
+        2,
+        0
+      ],
+      "IsDeadEnd": false
     }
   ],
   "RightDoorRooms": [
@@ -1328,7 +1466,9 @@
     24,
     26,
     28,
-    29
+    29,
+    30,
+    31
   ],
   "UpDoorRooms": [
     0,
@@ -1360,12 +1500,16 @@
     25,
     26,
     27,
-    29
+    29,
+    30,
+    31,
+    32
   ],
   "DownDoorRooms": [
     0,
     1,
     2,
+    32,
     4,
     5,
     6,
