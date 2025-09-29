@@ -11,8 +11,6 @@ seed = -1
 
 def generate_package(gen: FloorGenerator) -> dict:
     full_data = {}
-    transition_data, room_data = gen.get_room_and_transition_data()
-    map_init_strings = [gen.width, gen.height]
     try:
         boss_tile = gen.placed_dead_ends[randint(0, len(gen.placed_dead_ends)-1)]
         boss_tile_obj: Tile = gen.grid[boss_tile]
@@ -28,7 +26,10 @@ def generate_package(gen: FloorGenerator) -> dict:
     except:
         print("Error: No dead end for boss placement, not setting boss tile")
         boss_tile = (-1,-1)
-        
+    
+    transition_data, room_data = gen.get_room_and_transition_data()
+    map_init_strings = [gen.width, gen.height]
+
     for coord in gen.grid:
         if gen.grid[coord] != None:
             map_string = f"{gen.grid[coord].u}{gen.grid[coord].r}{gen.grid[coord].d}{gen.grid[coord].l}1"
