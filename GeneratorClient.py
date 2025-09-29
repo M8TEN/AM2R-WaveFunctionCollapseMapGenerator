@@ -15,9 +15,20 @@ def generate_package(gen: FloorGenerator) -> dict:
     map_init_strings = [gen.width, gen.height]
     try:
         boss_tile = gen.placed_dead_ends[randint(0, len(gen.placed_dead_ends)-1)]
+        boss_tile_obj: Tile = gen.grid[boss_tile]
+        if not boss_tile_obj.room_id in [406, 407, 408, 409]:
+            if boss_tile_obj.d == 2: # If tile has door down
+                boss_tile_obj.room_id = 406
+            elif boss_tile_obj.l == 2:
+                boss_tile_obj.room_id = 407
+            elif boss_tile_obj.u == 2:
+                boss_tile_obj.room_id = 408
+            elif boss_tile_obj.r == 2:
+                boss_tile_obj.room_id = 409
     except:
         print("Error: No dead end for boss placement, not setting boss tile")
         boss_tile = (-1,-1)
+        
     for coord in gen.grid:
         if gen.grid[coord] != None:
             map_string = f"{gen.grid[coord].u}{gen.grid[coord].r}{gen.grid[coord].d}{gen.grid[coord].l}1"
