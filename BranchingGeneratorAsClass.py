@@ -117,6 +117,9 @@ class FloorGenerator:
             next_pos = start_pos
             direction = 0
 
+        with open("RoomPlacementLog.txt") as file:
+            file.write("")
+
         self.generate(self.grid, next_pos, direction, 0)
         placed_dead_ends = [e for e in self.placed_dead_ends if not e in self.tiles_with_items]
         return len(placed_dead_ends) != 0
@@ -235,6 +238,8 @@ class FloorGenerator:
 
     # Writes the tile data into the grid
     def draw_room(self, draw_begin: tuple, room: dict, open_connections: list):
+        with open("RoomPlacementLog.txt", "a") as log_file:
+            log_file.write(f"Placed room with GML-ID {room['RoomID']} (Layout-ID {self.layout_id}) at coord {draw_begin}")
         layout = room["Layout"]
         bounding_box_origin = (room["BoundingBox"][0], room["BoundingBox"][1])
         for key in layout:
