@@ -1545,6 +1545,83 @@
         2
       ],
       "IsDeadEnd": false
+    },
+    {
+      "RoomID": 429,
+      "Lock": [],
+      "Weight": 2,
+      "Scaling": 0,
+      "Scaling Min": 4,
+      "Scaling Max": -1,
+      "Layout": {
+        "0,0": [
+          2,
+          1,
+          1,
+          2,
+          true,
+          []
+        ]
+      },
+      "DoorTiles": [
+        [
+          "0,0"
+        ],
+        [],
+        [],
+        [
+          "0,0"
+        ]
+      ],
+      "BoundingBox": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "IsDeadEnd": false
+    },
+    {
+      "RoomID": 430,
+      "Lock": [],
+      "Weight": 2,
+      "Scaling": 0,
+      "Scaling Min": 4,
+      "Scaling Max": -1,
+      "Layout": {
+        "0,0": [
+          2,
+          1,
+          1,
+          0,
+          false,
+          []
+        ],
+        "0,1": [
+          2,
+          0,
+          1,
+          1,
+          false,
+          []
+        ]
+      },
+      "DoorTiles": [
+        [
+          "0,0",
+          "0,1"
+        ],
+        [],
+        [],
+        []
+      ],
+      "BoundingBox": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "IsDeadEnd": false
     }
   ],
   "RightDoorRooms": [
@@ -1571,7 +1648,9 @@
     29,
     30,
     31,
-    33
+    33,
+    34,
+    35
   ],
   "UpDoorRooms": [
     0,
@@ -1620,6 +1699,7 @@
     6,
     8,
     11,
-    18
+    18,
+    34
   ]
 }

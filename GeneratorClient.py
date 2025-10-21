@@ -15,19 +15,19 @@ def generate_package(gen: FloorGenerator) -> dict:
         boss_tile = gen.placed_dead_ends[randint(0, len(gen.placed_dead_ends)-1)]
         boss_tile_obj: Tile = gen.grid[boss_tile]
         print(f"Placed boss room in room with ID {boss_tile_obj.room_id}")
-        if not boss_tile_obj.room_id in [406, 407, 408, 409]:
+        if not boss_tile_obj.room_id in [435, 436, 437, 438]:
             if boss_tile_obj.d == 2: # If tile has door down
-                boss_tile_obj.room_id = 406
-                print("Changed room ID to 406")
+                boss_tile_obj.room_id = 435
+                print("Changed room ID to 435")
             elif boss_tile_obj.l == 2:
-                boss_tile_obj.room_id = 407
-                print("Changed room ID to 407")
+                boss_tile_obj.room_id = 436
+                print("Changed room ID to 436")
             elif boss_tile_obj.u == 2:
-                boss_tile_obj.room_id = 408
-                print("Changed room ID to 408")
+                boss_tile_obj.room_id = 437
+                print("Changed room ID to 437")
             elif boss_tile_obj.r == 2:
-                boss_tile_obj.room_id = 409
-                print("Changed room ID to 408")
+                boss_tile_obj.room_id = 438
+                print("Changed room ID to 438")
             else:
                 print("Room didn't match expected layout, not replacing room ID")
     except:
