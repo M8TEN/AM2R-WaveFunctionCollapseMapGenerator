@@ -88,9 +88,10 @@ async def main():
                 if seed != -1:
                     random.seed(seed)
                 print(f"Start Inventory = {start_inventory}")
-                generator = FloorGenerator(int(command[1]), int(command[2]), "Original_EL_Sorted_Test.json", start_inventory)
                 success = False
+                generator = None
                 while not success:
+                    generator = FloorGenerator(int(command[1]), int(command[2]), "Original_EL_Sorted_Test.json", start_inventory)
                     success = generator.generate_floor()
                 package = generate_package(generator)
                 package_string = json.dumps(package)
