@@ -2482,7 +2482,7 @@
 			"Scaling": 0.0,
 			"Scaling Max": -1,
 			"Scaling Min": 4,
-			"Weight": 0.0
+			"Weight": 2.0
 		},
 		{
 			"BoundingBox": [
