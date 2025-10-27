@@ -237,6 +237,7 @@ class FloorGenerator:
     def draw_room(self, draw_begin: tuple, room: dict, open_connections: list):
         layout = room["Layout"]
         bounding_box_origin = (room["BoundingBox"][0], room["BoundingBox"][1])
+        placed_key_item: bool = False
         for key in layout:
             tile_pos = tuple(map(int, key.split(",")))
             bounding_box_offset = (tile_pos[0] - bounding_box_origin[0], tile_pos[1] - bounding_box_origin[1])
@@ -273,12 +274,13 @@ class FloorGenerator:
                 self.tiles_with_items.append(grid_pos)
                 item_key: str = f"{self.layout_id}_{bounding_box_offset[0]}_{bounding_box_offset[1]}"
                 self.item_data[item_key] = major
+                placed_key_item = True
                 print(f"Placed {ITEM_NAME_MAPPING[major]} (ID {major}) in Tile {grid_pos}")
         
         # Mark the room as a single tile big dead end if it is one for boss placement later
         if (len(layout)) == 1:
             pass
-        if len(layout) == 1 and (int(self.has_door(room["DoorTiles"], 0)) + int(self.has_door(room["DoorTiles"], 1)) + int(self.has_door(room["DoorTiles"], 2)) + int(self.has_door(room["DoorTiles"], 3)) == 1):
+        if len(layout) == 1 and (int(self.has_door(room["DoorTiles"], 0)) + int(self.has_door(room["DoorTiles"], 1)) + int(self.has_door(room["DoorTiles"], 2)) + int(self.has_door(room["DoorTiles"], 3)) == 1) and not placed_key_item:
             self.placed_dead_ends.append(draw_begin)
         
         self.layout_id += 1
