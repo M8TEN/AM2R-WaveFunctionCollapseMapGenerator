@@ -93,6 +93,7 @@ async def main():
                 while not success:
                     generator = FloorGenerator(int(command[1]), int(command[2]), "Original_EL_Sorted_Test.json", start_inventory)
                     success = generator.generate_floor()
+                    if not success: print("Floor generation failed, trying again..\n\n")
                 package = generate_package(generator)
                 package_string = json.dumps(package)
                 writer.write(package_string.encode())
