@@ -1620,10 +1620,10 @@
 			},
 			"Lock": [],
 			"RoomID": 429,
-			"Scaling": 0.0,
-			"Scaling Max": -1,
+			"Scaling": 0.015,
+			"Scaling Max": 30,
 			"Scaling Min": 4,
-			"Weight": 2.0
+			"Weight": 1.0
 		},
 		{
 			"BoundingBox": [
@@ -2650,7 +2650,7 @@
 					1,
 					0,
 					0,
-					true,
+					false,
 					[]
 				],
 				"2,1": [
@@ -2658,7 +2658,7 @@
 					0,
 					0,
 					1,
-					false,
+					true,
 					[]
 				]
 			},
@@ -2702,7 +2702,7 @@
 			"Scaling": 0.0,
 			"Scaling Max": -1,
 			"Scaling Min": 4,
-			"Weight": 2.0
+			"Weight": 0.6
 		},
 		{
 			"BoundingBox": [
@@ -2748,8 +2748,8 @@
 			"RoomID": 451,
 			"Scaling": 0.0,
 			"Scaling Max": -1,
-			"Scaling Min": 4,
-			"Weight": 2.0
+			"Scaling Min": 2,
+			"Weight": 0.0
 		},
 		{
 			"BoundingBox": [
@@ -2818,6 +2818,155 @@
 			"Scaling Max": -1,
 			"Scaling Min": 4,
 			"Weight": 2.0
+		},
+		{
+			"BoundingBox": [
+				0,
+				0,
+				2,
+				0
+			],
+			"DoorTiles": [
+				[
+					"2,0"
+				],
+				[],
+				[
+					"0,0"
+				],
+				[]
+			],
+			"IsDeadEnd": false,
+			"Layout": {
+				"0,0": [
+					0,
+					1,
+					2,
+					1,
+					true,
+					[
+						10,
+						12
+					]
+				],
+				"1,0": [
+					0,
+					1,
+					0,
+					1,
+					true,
+					[
+						12,
+						3
+					]
+				],
+				"2,0": [
+					2,
+					1,
+					0,
+					1,
+					true,
+					[
+						12,
+						11,
+						10
+					]
+				]
+			},
+			"Lock": [],
+			"RoomID": 453,
+			"Scaling": 0.0,
+			"Scaling Max": -1,
+			"Scaling Min": 4,
+			"Weight": 2.0
+		},
+		{
+			"BoundingBox": [
+				0,
+				0,
+				0,
+				0
+			],
+			"DoorTiles": [
+				[],
+				[],
+				[
+					"0,0"
+				],
+				[]
+			],
+			"IsDeadEnd": true,
+			"Layout": {
+				"0,0": [
+					1,
+					1,
+					2,
+					1,
+					true,
+					[]
+				]
+			},
+			"Lock": [],
+			"RoomID": 454,
+			"Scaling": 0.015,
+			"Scaling Max": 30,
+			"Scaling Min": 4,
+			"Weight": 0.0
+		},
+		{
+			"BoundingBox": [
+				0,
+				0,
+				0,
+				2
+			],
+			"DoorTiles": [
+				[
+					"0,0"
+				],
+				[
+					"0,0"
+				],
+				[
+					"0,0"
+				],
+				[
+					"0,2"
+				]
+			],
+			"IsDeadEnd": false,
+			"Layout": {
+				"0,0": [
+					2,
+					2,
+					2,
+					0,
+					false,
+					[]
+				],
+				"0,1": [
+					1,
+					0,
+					1,
+					0,
+					false,
+					[]
+				],
+				"0,2": [
+					1,
+					0,
+					1,
+					2,
+					false,
+					[]
+				]
+			},
+			"Lock": [],
+			"RoomID": 455,
+			"Scaling": 0.0,
+			"Scaling Max": -1,
+			"Scaling Min": 4,
+			"Weight": 2.0
 		}
 	],
 	"DownDoorRooms": [
@@ -2834,7 +2983,8 @@
 		34,
 		37,
 		43,
-		50
+		50,
+		56
 	],
 	"LeftDoorRooms": [
 		0,
@@ -2875,7 +3025,10 @@
 		49,
 		50,
 		51,
-		53
+		53,
+		54,
+		55,
+		56
 	],
 	"RightDoorRooms": [
 		0,
@@ -2918,7 +3071,9 @@
 		49,
 		51,
 		52,
-		53
+		53,
+		54,
+		56
 	],
 	"UpDoorRooms": [
 		0,
@@ -2934,6 +3089,7 @@
 		39,
 		41,
 		49,
-		50
+		50,
+		56
 	]
 }
