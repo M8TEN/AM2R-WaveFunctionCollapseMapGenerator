@@ -4,6 +4,7 @@ import random
 import sys
 from random import randint
 from BranchingGeneratorAsClass import Tile, FloorGenerator
+from copy import deepcopy
 
 PORT = 64196
 exit = False
@@ -91,7 +92,7 @@ async def main():
                 success = False
                 generator = None
                 while not success:
-                    generator = FloorGenerator(int(command[1]), int(command[2]), "Original_EL_Sorted_Test.json", start_inventory)
+                    generator = FloorGenerator(int(command[1]), int(command[2]), "Original_EL_Sorted_Test.json", deepcopy(start_inventory))
                     success = generator.generate_floor()
                     if not success: print("Floor generation failed, trying again..\n\n")
                 package = generate_package(generator)
