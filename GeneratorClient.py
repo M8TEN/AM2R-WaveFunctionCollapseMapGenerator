@@ -2,18 +2,18 @@ import asyncio
 import json
 import random
 import sys
-from random import randint
+import random
 from BranchingGeneratorAsClass import Tile, FloorGenerator
 from copy import deepcopy
 
-PORT = 64196
-exit = False
-seed = -1
+PORT: int = 64196
+exit: bool = False
+seed: int = -1
 
 def generate_package(gen: FloorGenerator) -> dict:
     full_data = {}
     try:
-        boss_tile = gen.placed_dead_ends[randint(0, len(gen.placed_dead_ends)-1)]
+        boss_tile = gen.placed_dead_ends[random.randint(0, len(gen.placed_dead_ends)-1)]
         boss_tile_obj: Tile = gen.grid[boss_tile]
         print(f"Placed boss room in room with ID {boss_tile_obj.room_id}")
         if not boss_tile_obj.room_id in [435, 436, 437, 438]:
@@ -88,6 +88,7 @@ async def main():
                     i += 2
                 if seed != -1:
                     random.seed(seed)
+                    print(f"Generating with seed {seed}")
                 print(f"Start Inventory = {start_inventory}")
                 success = False
                 generator = None
@@ -117,8 +118,8 @@ try:
     seed = int(sys.argv[1])
 except ValueError:
     print(f"Could not convert '{sys.argv[1]}' to integer, using random seed")
-    seed = -1
+    seed = random.randint(0, sys.maxsize)
 except:
-    seed = -1
+    seed = random.randint(0, sys.maxsize)
 
 asyncio.run(main())
