@@ -272,7 +272,7 @@ class FloorGenerator:
             # Chance to place an item onto the tile. If the tile can't have an item or if it can hold an item but the location is locked
             # or there are no more major items to place, chance will be 0
             can_tile_have_item: bool = layout[key][4]
-            locks_unlocked: bool = items_locks == layout[key][5]
+            locks_unlocked: bool = set(items_locks) == set(layout[key][5])
             chance = uniform(0,1) * int(can_tile_have_item) * int(len(self.possible_majors) > 0) * int(locks_unlocked)
             if chance >= 0.9:
                 # Select a random major item to be placed at the tile
