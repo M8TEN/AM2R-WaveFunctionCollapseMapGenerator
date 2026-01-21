@@ -10,7 +10,7 @@ PORT: int = 64196
 exit: bool = False
 seed: int = -1
 
-def generate_package(gen: FloorGenerator) -> dict:
+def generate_package(gen: FloorGenerator, n_boss_keys: int = 0) -> dict:
     full_data = {}
     try:
         boss_tile = gen.placed_dead_ends[random.randint(0, len(gen.placed_dead_ends)-1)]
@@ -60,7 +60,7 @@ def generate_package(gen: FloorGenerator) -> dict:
     full_data["TransitionData"] = transition_data
     full_data["MapData"] = map_init_strings
     full_data["ItemData"] = gen.item_data
-    full_data["BossData"] = gen.grid[boss_tile].layout_id
+    full_data["BossData"] = n_boss_keys
 
     return full_data
 
@@ -75,14 +75,21 @@ async def main():
         try:
             command = await reader.readuntil(b"#")
             command_type = command[0]
+            print(f"Command =", end=" ")
+            for b in command:
+                print(b, end=" ")
+            print("")
         except asyncio.IncompleteReadError:
             print("Server closed, exiting")
             command = ""
             command_type = 2
         match command_type:
             case 1: # Generate Floor
-                start_inventory = []
-                i = 3
+                floor_width: int = int(command[1])
+                floor_height: int = int(command[2])
+                number_of_keys: int = int(command[3])
+                start_inventory: list = []
+                i: int = 4
                 while i < len(command)-2:
                     start_inventory.append(merge_bytes_to_int(command[i+1], command[i]))
                     i += 2
@@ -90,14 +97,14 @@ async def main():
                     random.seed(seed)
                     print(f"Generating with seed {seed}")
                 print(f"Start Inventory = {start_inventory}")
-                success = False
-                generator = None
+                success: bool = False
+                generator: FloorGenerator = None
                 while not success:
-                    generator = FloorGenerator(int(command[1]), int(command[2]), "Original_EL_Sorted_Test.json", deepcopy(start_inventory))
-                    success = generator.generate_floor()
+                    generator = FloorGenerator(floor_width, floor_height, "Original_EL_Sorted_Test.json", deepcopy(start_inventory))
+                    success = generator.generate_floor(number_of_keys)
                     if not success: print("Floor generation failed, trying again..\n\n")
-                package = generate_package(generator)
-                package_string = json.dumps(package)
+                package: dict = generate_package(generator, number_of_keys)
+                package_string: str = json.dumps(package)
                 writer.write(package_string.encode())
                 await writer.drain()
                 print("\nWrote Package Data to Server")
@@ -105,10 +112,6 @@ async def main():
                 exit = True
             case _:
                 print(f"Received unknown command_type {command_type}")
-        print(f"Command = ", end="")
-        for b in command:
-            print(b, end=" ")
-        print("")
     
     writer.close()
     await writer.wait_closed()
