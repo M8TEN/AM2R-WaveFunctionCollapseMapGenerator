@@ -2,7 +2,7 @@ import json
 import time
 import traceback
 from copy import deepcopy
-from random import randint, uniform, seed
+from random import randint, uniform, seed, shuffle
 import sys
 
 frames = 0
@@ -10,6 +10,7 @@ max_recursion_depth_reached = 0
 
 UNIQUE_ROOMS = False
 START = (3,3) # Coordinate of the top-left corner in the output space
+BOSS_KEY: int = 1000
 # Names of the Major items. Used for printing item placements
 ITEM_NAME_MAPPING = {
     450: "Bombs",
@@ -24,7 +25,8 @@ ITEM_NAME_MAPPING = {
     461: "Ice Beam",
     925: "Missile Tank",
     926: "Super Missile Tank",
-    927: "Power Bomb Tank"
+    927: "Power Bomb Tank",
+    BOSS_KEY: "Boss Key"
 }
 
 # Door directions
@@ -46,26 +48,28 @@ class Tile:
 
 class FloorGenerator:
     def __init__(self, width: int, height: int, room_data_file_path: str, start_inventory: list):
-        self.width = width
-        self.height = height
-        self.room_data = []
-        self.right_door_rooms = []
-        self.up_door_rooms = []
-        self.left_door_rooms = []
-        self.down_door_rooms = []
+        self.width: int = width
+        self.height: int = height
+        self.room_data: list = []
+        self.right_door_rooms: list = []
+        self.up_door_rooms: list = []
+        self.left_door_rooms: list = []
+        self.down_door_rooms: list = []
         self.read_room_data(room_data_file_path)
-        self.grid = self.create_grid(width, height)
-        self.dead_ends = self.get_dead_ends(self.room_data)
-        self.placed_dead_ends = []
-        self.inv = start_inventory
-        self.possible_majors = [m for m in ITEM_NAME_MAPPING.keys() if not m in self.inv]
-        self.tiles_with_items = []
-        self.possible_lock_states = self.inventory_to_lock_states(self.inv)
-        self.start_pos = (0,0)
-        self.layout_id = 1
-        self.transition_data = {}
-        self.placed_doors = []
-        self.item_data = {}
+        self.grid: dict = self.create_grid(width, height)
+        self.dead_ends: list = self.get_dead_ends(self.room_data)
+        self.placed_dead_ends: list = []
+        self.inv: list = start_inventory
+        self.possible_majors: list = [m for m in ITEM_NAME_MAPPING.keys() if not m in self.inv]
+        self.tiles_with_items: list = []
+        self.possible_lock_states: list = self.inventory_to_lock_states(self.inv)
+        self.start_pos: tuple = (0,0)
+        self.layout_id: int = 1
+        self.transition_data: dict = {}
+        self.placed_doors: list = []
+        self.item_data: dict = {}
+        self.keys_to_place: int = 0
+        self.potential_key_places: set = set()
     
     def read_room_data(self, file_path: str) -> None:
         try:
@@ -103,7 +107,8 @@ class FloorGenerator:
 
         return (start_pos, start_tile)
 
-    def generate_floor(self) -> bool:
+    def generate_floor(self, boss_keys: int = 0) -> bool:
+        self.keys_to_place = boss_keys
         next_pos = (0,0)
         direction = 0
         start_pos, start_tile = self.first_room()
@@ -119,7 +124,9 @@ class FloorGenerator:
 
         self.generate(self.grid, next_pos, direction, 0)
         placed_dead_ends = [e for e in self.placed_dead_ends if not e in self.tiles_with_items]
-        return len(placed_dead_ends) != 0
+        correct_keys: bool = self.place_remaining_boss_keys()
+        successful_generation: bool = (len(placed_dead_ends) != 0) and correct_keys
+        return successful_generation
 
 # Returns a dict where coordinate tuples are the key and None is the value
     def create_grid(self, w: int, h: int) -> dict:
@@ -276,6 +283,18 @@ class FloorGenerator:
                 self.item_data[item_key] = major
                 placed_key_item = True
                 print(f"Placed {ITEM_NAME_MAPPING[major]} (ID {major}) in Tile {grid_pos}")
+            elif chance >= 0.8 and self.keys_to_place > 0:
+                # Place a boss key
+                item_key: str = f"{self.layout_id}_{bounding_box_offset[0]}_{bounding_box_offset[1]}"
+                self.item_data[item_key] = BOSS_KEY
+                self.keys_to_place -= 1
+                self.tiles_with_items.append(grid_pos)
+                placed_key_item = True
+                print(f"Placed {ITEM_NAME_MAPPING[BOSS_KEY]} (ID {BOSS_KEY}) in Tile {grid_pos}. {self.keys_to_place} keys remaining.")
+            elif self.keys_to_place > 0:
+                # No item or key was placed
+                tile_info: tuple = (self.layout_id, bounding_box_offset[0], bounding_box_offset[1], grid_pos)
+                self.potential_key_places.add(tile_info)
         
         # Mark the room as a single tile big dead end if it is one for boss placement later
         if (len(layout)) == 1:
@@ -448,6 +467,19 @@ class FloorGenerator:
 
         room_data.insert(0, [])
         return transition_data, room_data
+    
+    def place_remaining_boss_keys(self) -> bool:
+        if self.keys_to_place == 0: return True # Already placed all keys
+        print("Not enough keys placed, placing remaining keys..", end="\n\n")
+        remaining_places = list(self.potential_key_places)
+        while self.keys_to_place > 0 and len(remaining_places) > 0:
+            item_tile: tuple = remaining_places.pop(randint(0, len(remaining_places)-1))
+            item_key: str = f"{item_tile[0]}_{item_tile[1]}_{item_tile[2]}"
+            self.item_data[item_key] = BOSS_KEY
+            self.keys_to_place -= 1
+            print(f"Placed {ITEM_NAME_MAPPING[BOSS_KEY]} (ID {BOSS_KEY}) in Tile {item_tile[3]}. {self.keys_to_place} keys remaining.")
+        
+        return (self.keys_to_place == 0)
             
     
 # START OF MAIN PROGRAM
@@ -475,7 +507,7 @@ if __name__ == "__main__":
         max_recursion_depth_reached = 0
         generator = FloorGenerator(WIDTH, HEIGHT, "Original_EL_Sorted_Test.json", [])
         try:
-            success = generator.generate_floor()
+            success = generator.generate_floor(2)
         except KeyboardInterrupt:
             exit(1)
         except:
