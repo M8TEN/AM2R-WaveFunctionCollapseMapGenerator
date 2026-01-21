@@ -271,7 +271,9 @@ class FloorGenerator:
             items_locks = [l for l in self.possible_lock_states if l in layout[key][5]]
             # Chance to place an item onto the tile. If the tile can't have an item or if it can hold an item but the location is locked
             # or there are no more major items to place, chance will be 0
-            chance = uniform(0,1) * int(layout[key][4]) * int(len(self.possible_majors) > 0) * int(len(items_locks) == len(layout[key][5]))
+            can_tile_have_item: bool = layout[key][4]
+            locks_unlocked: bool = items_locks == layout[key][5]
+            chance = uniform(0,1) * int(can_tile_have_item) * int(len(self.possible_majors) > 0) * int(locks_unlocked)
             if chance >= 0.9:
                 # Select a random major item to be placed at the tile
                 major = self.possible_majors.pop(randint(0, len(self.possible_majors)-1))
@@ -291,7 +293,7 @@ class FloorGenerator:
                 self.tiles_with_items.append(grid_pos)
                 placed_key_item = True
                 print(f"Placed {ITEM_NAME_MAPPING[BOSS_KEY]} (ID {BOSS_KEY}) in Tile {grid_pos}. {self.keys_to_place} keys remaining.")
-            elif self.keys_to_place > 0:
+            elif self.keys_to_place > 0 and can_tile_have_item and locks_unlocked:
                 # No item or key was placed
                 tile_info: tuple = (self.layout_id, bounding_box_offset[0], bounding_box_offset[1], grid_pos)
                 self.potential_key_places.add(tile_info)
@@ -507,7 +509,7 @@ if __name__ == "__main__":
         max_recursion_depth_reached = 0
         generator = FloorGenerator(WIDTH, HEIGHT, "Original_EL_Sorted_Test.json", [])
         try:
-            success = generator.generate_floor(2)
+            success = generator.generate_floor(1)
         except KeyboardInterrupt:
             exit(1)
         except:
