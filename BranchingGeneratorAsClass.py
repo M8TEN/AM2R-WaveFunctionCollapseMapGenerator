@@ -60,7 +60,7 @@ class FloorGenerator:
         self.dead_ends: list = self.get_dead_ends(self.room_data)
         self.placed_dead_ends: list = []
         self.inv: list = start_inventory
-        self.possible_majors: list = [m for m in ITEM_NAME_MAPPING.keys() if not m in self.inv]
+        self.possible_majors: list = [m for m in ITEM_NAME_MAPPING.keys() if not m in self.inv and m != BOSS_KEY]
         self.tiles_with_items: list = []
         self.possible_lock_states: list = self.inventory_to_lock_states(self.inv)
         self.start_pos: tuple = (0,0)
