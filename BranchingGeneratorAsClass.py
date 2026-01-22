@@ -123,8 +123,8 @@ class FloorGenerator:
             direction = 0
 
         self.generate(self.grid, next_pos, direction, 0)
-        placed_dead_ends = [e for e in self.placed_dead_ends if not e in self.tiles_with_items]
         correct_keys: bool = self.place_remaining_boss_keys()
+        placed_dead_ends = [e for e in self.placed_dead_ends if not e in self.tiles_with_items]
         successful_generation: bool = (len(placed_dead_ends) != 0) and correct_keys
         return successful_generation
 
@@ -272,9 +272,9 @@ class FloorGenerator:
             # Chance to place an item onto the tile. If the tile can't have an item or if it can hold an item but the location is locked
             # or there are no more major items to place, chance will be 0
             can_tile_have_item: bool = layout[key][4]
-            locks_unlocked: bool = set(items_locks) == set(layout[key][5])
-            chance = uniform(0,1) * int(can_tile_have_item) * int(len(self.possible_majors) > 0) * int(locks_unlocked)
-            if chance >= 0.9:
+            locks_unlocked: bool = set(layout[key][5]) <= set(items_locks) # Check if item location locks are a subset of opened locks
+            chance = uniform(0,1) * int(can_tile_have_item) * int(locks_unlocked)
+            if chance >= 0.9 and (len(self.possible_majors) > 0):
                 # Select a random major item to be placed at the tile
                 major = self.possible_majors.pop(randint(0, len(self.possible_majors)-1))
                 self.inv.append(major)
@@ -479,6 +479,7 @@ class FloorGenerator:
             item_key: str = f"{item_tile[0]}_{item_tile[1]}_{item_tile[2]}"
             self.item_data[item_key] = BOSS_KEY
             self.keys_to_place -= 1
+            self.tiles_with_items.append(item_tile[3])
             print(f"Placed {ITEM_NAME_MAPPING[BOSS_KEY]} (ID {BOSS_KEY}) in Tile {item_tile[3]}. {self.keys_to_place} keys remaining.")
         
         return (self.keys_to_place == 0)
@@ -509,7 +510,7 @@ if __name__ == "__main__":
         max_recursion_depth_reached = 0
         generator = FloorGenerator(WIDTH, HEIGHT, "Original_EL_Sorted_Test.json", [])
         try:
-            success = generator.generate_floor(1)
+            success = generator.generate_floor(2)
         except KeyboardInterrupt:
             exit(1)
         except:
