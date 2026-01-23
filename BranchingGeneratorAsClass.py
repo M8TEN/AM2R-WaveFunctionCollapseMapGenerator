@@ -94,21 +94,21 @@ class FloorGenerator:
         start_pos = (randint(0, self.width-1), randint(0, self.height-1))
         self.start_pos = start_pos
         if start_pos[0] == 0:
-            possible_start_tiles = [Tile(2, 1, 1, 1, 409, 0, (0,0))]
+            possible_start_tiles = [Tile(DOOR, WALL, WALL, WALL, 409, 0, (0,0))]
         elif start_pos[0] == self.width-1:
-            possible_start_tiles = [Tile(1, 1, 2, 1, 407, 0, (0,0))]
+            possible_start_tiles = [Tile(WALL, WALL, DOOR, WALL, 407, 0, (0,0))]
         else:
             possible_start_tiles = [
-            Tile(2, 1, 1, 1, 409, 0, (0,0)),
-            Tile(1, 1, 2, 1, 407, 0, (0,0)),
+            Tile(DOOR, WALL, WALL, WALL, 409, 0, (0,0)),
+            Tile(WALL, WALL, DOOR, WALL, 407, 0, (0,0)),
         ]
 
         start_tile = possible_start_tiles[randint(0, len(possible_start_tiles)-1)]
         self.grid[start_pos] = start_tile
-        if start_tile.l == 2:
-            self.placed_doors.append((start_pos, 2))
+        if start_tile.l == DOOR:
+            self.placed_doors.append((start_pos, LEFT))
         else:
-            self.placed_doors.append((start_pos, 0))
+            self.placed_doors.append((start_pos, RIGHT))
 
         return (start_pos, start_tile)
 
@@ -117,12 +117,12 @@ class FloorGenerator:
         next_pos = (0,0)
         direction = 0
         start_pos, start_tile = self.first_room()
-        if start_tile.r == 2:
+        if start_tile.r == DOOR:
             next_pos = (start_pos[0] + 1, start_pos[1])
-            direction = 2
-        elif start_tile.l == 2:
+            direction = LEFT
+        elif start_tile.l == DOOR:
             next_pos = (start_pos[0] - 1, start_pos[1])
-            direction = 0
+            direction = RIGHT
         else:
             next_pos = start_pos
             direction = 0
