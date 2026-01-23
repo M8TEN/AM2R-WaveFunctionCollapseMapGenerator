@@ -246,7 +246,7 @@ class FloorGenerator:
 
         return True
 
-    def place_item(self, item_id: int, bounding_box_offset: tuple, grid_pos: tuple) -> None:
+    def place_item(self, item_id: int, layout_id: int, bounding_box_offset: tuple, grid_pos: tuple) -> None:
         debug_message: str = f"Placed {ITEM_NAME_MAPPING[item_id]} (ID {item_id}) in Tile {grid_pos}"
         if (item_id != BOSS_KEY):
             self.inv.append(item_id)
@@ -255,7 +255,7 @@ class FloorGenerator:
         else:
             debug_message += f". {self.keys_to_place} Keys remaining."
         self.tiles_with_items.append(grid_pos)
-        item_key: str = f"{self.layout_id}_{bounding_box_offset[0]}_{bounding_box_offset[1]}"
+        item_key: str = f"{layout_id}_{bounding_box_offset[0]}_{bounding_box_offset[1]}"
         self.item_data[item_key] = item_id
         print(debug_message)
 
@@ -296,12 +296,12 @@ class FloorGenerator:
             if chance >= 0.9 and (len(self.possible_majors) > 0):
                 # Select a random major item to be placed at the tile
                 major = self.possible_majors.pop(randint(0, len(self.possible_majors)-1))
-                self.place_item(major, bounding_box_offset, grid_pos)
+                self.place_item(major, self.layout_id, bounding_box_offset, grid_pos)
                 placed_key_item = True
             elif chance >= 0.8 and self.keys_to_place > 0:
                 # Place a boss key at the tile
                 self.keys_to_place -= 1
-                self.place_item(BOSS_KEY, bounding_box_offset, grid_pos)
+                self.place_item(BOSS_KEY, self.layout_id, bounding_box_offset, grid_pos)
                 placed_key_item = True
             elif self.keys_to_place > 0 and can_tile_have_item and locks_unlocked:
                 # No item or key was placed
@@ -486,9 +486,9 @@ class FloorGenerator:
         remaining_places = list(self.potential_key_places)
         while self.keys_to_place > 0 and len(remaining_places) > 0:
             item_tile: tuple = remaining_places.pop(randint(0, len(remaining_places)-1))
-            bb_offset: tuple = (item_tile[0], item_tile[1])
+            bb_offset: tuple = (item_tile[1], item_tile[2])
             self.keys_to_place -= 1
-            self.place_item(BOSS_KEY, bb_offset, item_tile[3])
+            self.place_item(BOSS_KEY, item_tile[0], bb_offset, item_tile[3])
         
         return (self.keys_to_place == 0)
             
