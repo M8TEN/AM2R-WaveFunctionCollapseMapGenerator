@@ -2,7 +2,7 @@ import json
 import time
 import traceback
 from copy import deepcopy
-from random import randint, uniform, seed, shuffle
+from random import randint, uniform, seed
 import sys
 
 frames = 0
@@ -30,10 +30,11 @@ ITEM_NAME_MAPPING = {
 }
 
 # Door directions
-RIGHT = 0
-UP = 1
-LEFT = 2
-DOWN = 3
+RIGHT: int = 0
+UP: int = 1
+LEFT: int = 2
+DOWN: int = 3
+BACK: int = 4
 
 # Wall types
 NO_WALL: int = 0
@@ -75,6 +76,8 @@ class FloorGenerator:
         self.item_data: dict = {}
         self.keys_to_place: int = 0
         self.potential_key_places: set = set()
+        self.boss_tile: tuple = None
+        self.teleporter_transitions: dict = {}
     
     def read_room_data(self, file_path: str) -> None:
         try:
@@ -131,6 +134,11 @@ class FloorGenerator:
         correct_keys: bool = self.place_remaining_boss_keys()
         placed_dead_ends = [e for e in self.placed_dead_ends if not e in self.tiles_with_items]
         successful_generation: bool = (len(placed_dead_ends) != 0) and correct_keys
+        if not successful_generation:
+            return False
+        
+        self.boss_tile = placed_dead_ends.pop(randint(0, len(placed_dead_ends)-1))
+        self.place_dead_end_teleporters(placed_dead_ends)
         return successful_generation
 
 # Returns a dict where coordinate tuples are the key and None is the value
@@ -477,6 +485,17 @@ class FloorGenerator:
                 global_bounding_box_coords = (grid_coord[0] - tile.bounding_box_offset[0], grid_coord[1] - tile.bounding_box_offset[1])
                 room_data.append([tile.room_id, global_bounding_box_coords[0], global_bounding_box_coords[1]])
 
+        for dead_end in self.teleporter_transitions:
+            tile_at_coord: Tile = self.grid[dead_end]
+            outer_key: str = str(tile_at_coord.layout_id)
+            inner_key: str = f"{tile_at_coord.bounding_box_offset[0]}_{tile_at_coord.bounding_box_offset[1]}_{BACK}"
+            target_tile: Tile = self.grid[self.teleporter_transitions[dead_end]]
+            value: list = [target_tile.layout_id, target_tile.bounding_box_offset[0], target_tile.bounding_box_offset[1]]
+
+            if not outer_key in transition_data:
+                transition_data[outer_key] = {}
+            transition_data[outer_key][inner_key] = value
+
         room_data.insert(0, [])
         return transition_data, room_data
     
@@ -491,6 +510,23 @@ class FloorGenerator:
             self.place_item(BOSS_KEY, item_tile[0], bb_offset, item_tile[3])
         
         return (self.keys_to_place == 0)
+    
+    def place_dead_end_teleporters(self, dead_ends: list) -> None:
+        TELEPORT_CHANCE: float = 0.50
+        while len(dead_ends) >= 2:
+            examine_end: tuple = dead_ends.pop(0)
+            furthest_dist: float = 0
+            closest_end_idx: int = 0
+            for i in range(len(dead_ends)):
+                other_end: tuple = dead_ends[i]
+                dist: float = abs(examine_end[0] - other_end[0]) + abs(examine_end[1] - other_end[1])
+                if dist > furthest_dist:
+                    closest_end_idx = i
+                    furthest_dist = dist
+            other_end: tuple = dead_ends.pop(closest_end_idx)
+            if uniform(0.0,1.0) < TELEPORT_CHANCE:
+                self.teleporter_transitions[examine_end] = other_end
+                print(f"Connected Dead-End at {examine_end} and {other_end} with a Teleporter")
             
     
 # START OF MAIN PROGRAM
@@ -543,12 +579,13 @@ if __name__ == "__main__":
     map_init_strings = [WIDTH, HEIGHT]
     out = []
     try:
-        boss_tile = generator.placed_dead_ends[randint(0, len(generator.placed_dead_ends)-1)]
+        boss_tile = generator.boss_tile
     except:
         print("Error: No dead end for boss placement, not setting boss tile")
         boss_tile = (-1,-1)
 
     transition_data, room_data = generator.get_room_and_transition_data()
+    tiles_with_teleporters = list(generator.teleporter_transitions.keys()) + list(generator.teleporter_transitions.values())
     grid = generator.grid
     for position in grid:
         if grid[position] != None:
@@ -566,6 +603,9 @@ if __name__ == "__main__":
             elif position in generator.tiles_with_items:
                 new_tile["special"] = 3
                 map_string += "3"
+            elif position in tiles_with_teleporters:
+                new_tile["color"] = 1
+                map_string += "0"
             elif position == boss_tile:
                 new_tile["special"] = 4
                 # Set tile color to purple

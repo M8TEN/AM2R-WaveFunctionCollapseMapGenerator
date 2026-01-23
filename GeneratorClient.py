@@ -11,10 +11,9 @@ exit: bool = False
 seed: int = -1
 
 def generate_package(gen: FloorGenerator, n_boss_keys: int = 0) -> dict:
-    full_data = {}
+    full_data: dict = {}
     try:
-        boss_tile = gen.placed_dead_ends[random.randint(0, len(gen.placed_dead_ends)-1)]
-        boss_tile_obj: Tile = gen.grid[boss_tile]
+        boss_tile_obj: Tile = gen.grid[gen.boss_tile]
         print(f"Placed boss room in room with ID {boss_tile_obj.room_id}")
         if not boss_tile_obj.room_id in [435, 436, 437, 438]:
             if boss_tile_obj.d == 2: # If tile has door down
