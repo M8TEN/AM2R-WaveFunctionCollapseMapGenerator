@@ -26,7 +26,7 @@ ITEM_NAME_MAPPING = {
     925: "Missile Tank",
     926: "Super Missile Tank",
     927: "Power Bomb Tank",
-    BOSS_KEY: "Boss Key"
+    BOSS_KEY: "Master Teleporter Key"
 }
 
 # Door directions
@@ -34,6 +34,11 @@ RIGHT = 0
 UP = 1
 LEFT = 2
 DOWN = 3
+
+# Wall types
+NO_WALL: int = 0
+WALL: int = 1
+DOOR: int = 2
 
 # Data Container class to hold information about a tile in the grid
 class Tile:
@@ -152,12 +157,13 @@ class FloorGenerator:
 
     # Returns a list of rooms filtered by their probability (weight) and if they have a door in the direction given
     def get_possible_rooms(self, door_dir: int, depth: int) -> list:
-        examine_list = self.right_door_rooms
-        if door_dir == 1:
+        if door_dir == RIGHT:
+            examine_list = self.right_door_rooms
+        elif door_dir == UP:
             examine_list = self.up_door_rooms
-        elif door_dir == 2:
+        elif door_dir == LEFT:
             examine_list = self.left_door_rooms
-        elif door_dir == 3:
+        elif door_dir == DOWN:
             examine_list = self.down_door_rooms
         # Remove rooms from consideration if the room has a weight of 0
         possible_rooms = [r for r in examine_list if (self.room_weight(self.room_data[r], depth) > 0)]
@@ -184,7 +190,7 @@ class FloorGenerator:
     def start_positions(self, layout: dict, door_dir: int) -> list:
         positions = []
         for key in layout:
-            if layout[key][door_dir] == 2:
+            if layout[key][door_dir] == DOOR:
                 positions.append(key)
         return positions
 
@@ -209,8 +215,8 @@ class FloorGenerator:
             global_tile_pos = (draw_begin[0] + relative_tile_pos[0], draw_begin[1] + relative_tile_pos[1])
             # Room is invalid if it has tile out of bounds or if it overlaps another room or if it's on the edge and has a transition pointing out of bounds
             if grid[global_tile_pos] != None or\
-                (global_tile_pos[0] == 0 and layout[key][2] == 2) or (global_tile_pos[0] == self.width-1 and layout[key][0] == 2) or\
-                (global_tile_pos[1] == 0 and layout[key][1] == 2) or (global_tile_pos[1] == self.height-1 and layout[key][3] == 2):
+                (global_tile_pos[0] == 0 and layout[key][LEFT] == DOOR) or (global_tile_pos[0] == self.width-1 and layout[key][RIGHT] == DOOR) or\
+                (global_tile_pos[1] == 0 and layout[key][UP] == DOOR) or (global_tile_pos[1] == self.height-1 and layout[key][DOWN] == DOOR):
                 return False
         
             right_pos = (global_tile_pos[0] + 1, global_tile_pos[1])
@@ -219,23 +225,23 @@ class FloorGenerator:
             bottom_pos = (global_tile_pos[0], global_tile_pos[1] + 1)
 
             # Invalidate rooms if they have a transition into a wall
-            if ((right_pos[0] >= self.width or (grid[right_pos] and grid[right_pos].l == 1)) and layout[key][0] == 2)\
-                or ((top_pos[1] < 0 or (grid[top_pos] and grid[top_pos].d == 1)) and layout[key][1] == 2)\
-                or ((left_pos[0] < 0 or (grid[left_pos] and grid[left_pos].r == 1)) and layout[key][2] == 2)\
-                or ((bottom_pos[1] >= self.height or (grid[bottom_pos] and grid[bottom_pos].u == 1)) and layout[key][3] == 2):
+            if ((right_pos[0] >= self.width or (grid[right_pos] and grid[right_pos].l == WALL)) and layout[key][RIGHT] == DOOR)\
+                or ((top_pos[1] < 0 or (grid[top_pos] and grid[top_pos].d == WALL)) and layout[key][UP] == DOOR)\
+                or ((left_pos[0] < 0 or (grid[left_pos] and grid[left_pos].r == WALL)) and layout[key][LEFT] == DOOR)\
+                or ((bottom_pos[1] >= self.height or (grid[bottom_pos] and grid[bottom_pos].u == WALL)) and layout[key][DOWN] == DOOR):
                 return False
 
             if right_pos[0] < self.width:
-                if (grid[right_pos] and grid[right_pos].l == 2) and layout[key][0] == 1:
+                if (grid[right_pos] and grid[right_pos].l == DOOR) and layout[key][RIGHT] == WALL:
                     return False
             if top_pos[1] > 0:
-                if (grid[top_pos] and grid[top_pos].d == 2) and layout[key][1] == 1:
+                if (grid[top_pos] and grid[top_pos].d == DOOR) and layout[key][UP] == WALL:
                     return False
             if left_pos[0] > 0:
-                if (grid[left_pos] and grid[left_pos].r == 2) and layout[key][2] == 1:
+                if (grid[left_pos] and grid[left_pos].r == DOOR) and layout[key][LEFT] == WALL:
                     return False
             if bottom_pos[1] < self.height:
-                if (grid[bottom_pos] and grid[bottom_pos].u == 2) and layout[key][3] == 1:
+                if (grid[bottom_pos] and grid[bottom_pos].u == DOOR) and layout[key][DOWN] == WALL:
                     return False
 
         return True
@@ -264,22 +270,22 @@ class FloorGenerator:
             grid_pos = (draw_begin[0] + tile_pos[0], draw_begin[1] + tile_pos[1])
             tile_data = layout[key]
             self.grid[grid_pos] = Tile(tile_data[0], tile_data[1], tile_data[2], tile_data[3], room["RoomID"], self.layout_id, bounding_box_offset)
-            if tile_data[0] == 2:
-                self.placed_doors.append((grid_pos, 0))
+            if tile_data[RIGHT] == DOOR:
+                self.placed_doors.append((grid_pos, RIGHT))
                 if not self.grid[(grid_pos[0] + 1, grid_pos[1])]:
-                    open_connections.append([(grid_pos[0] + 1, grid_pos[1]), 2])
-            if tile_data[1] == 2:
-                self.placed_doors.append((grid_pos, 1))
+                    open_connections.append([(grid_pos[0] + 1, grid_pos[1]), LEFT])
+            if tile_data[UP] == DOOR:
+                self.placed_doors.append((grid_pos, UP))
                 if not self.grid[(grid_pos[0], grid_pos[1] - 1)]:
-                    open_connections.append([(grid_pos[0], grid_pos[1] - 1), 3])
-            if tile_data[2] == 2:
-                self.placed_doors.append((grid_pos, 2))
+                    open_connections.append([(grid_pos[0], grid_pos[1] - 1), DOWN])
+            if tile_data[LEFT] == DOOR:
+                self.placed_doors.append((grid_pos, LEFT))
                 if not self.grid[(grid_pos[0] - 1, grid_pos[1])]:
-                    open_connections.append([(grid_pos[0] - 1, grid_pos[1]), 0])
-            if tile_data[3] == 2:
-                self.placed_doors.append((grid_pos, 3))
+                    open_connections.append([(grid_pos[0] - 1, grid_pos[1]), RIGHT])
+            if tile_data[DOWN] == DOOR:
+                self.placed_doors.append((grid_pos, DOWN))
                 if not self.grid[(grid_pos[0], grid_pos[1] + 1)]:
-                    open_connections.append([(grid_pos[0], grid_pos[1] + 1), 1])
+                    open_connections.append([(grid_pos[0], grid_pos[1] + 1), UP])
             # Get the item locks that lock an item location at a tile in the room
             items_locks = [l for l in self.possible_lock_states if l in layout[key][5]]
             # Chance to place an item onto the tile. If the tile can't have an item or if it can hold an item but the location is locked
@@ -305,7 +311,7 @@ class FloorGenerator:
         # Mark the room as a single tile big dead end if it is one for boss placement later
         if (len(layout)) == 1:
             pass
-        if len(layout) == 1 and (int(self.has_door(room["DoorTiles"], 0)) + int(self.has_door(room["DoorTiles"], 1)) + int(self.has_door(room["DoorTiles"], 2)) + int(self.has_door(room["DoorTiles"], 3)) == 1) and not placed_key_item:
+        if len(layout) == 1 and (int(self.has_door(room["DoorTiles"], RIGHT)) + int(self.has_door(room["DoorTiles"], UP)) + int(self.has_door(room["DoorTiles"], LEFT)) + int(self.has_door(room["DoorTiles"], DOWN)) == 1) and not placed_key_item:
             self.placed_dead_ends.append(draw_begin)
         
         self.layout_id += 1
@@ -507,12 +513,13 @@ if __name__ == "__main__":
 
     # If we broke out of the generation because of an Exception, repeat until we got a valid floor
     success = False
+    KEYS_TO_PLACE: int = int(round(WIDTH/4 - 1))
     while not success:
         frames = 0
         max_recursion_depth_reached = 0
         generator = FloorGenerator(WIDTH, HEIGHT, "Original_EL_Sorted_Test.json", [])
         try:
-            success = generator.generate_floor(1)
+            success = generator.generate_floor(KEYS_TO_PLACE)
         except KeyboardInterrupt:
             exit(1)
         except:
