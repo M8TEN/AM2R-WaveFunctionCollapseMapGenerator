@@ -496,6 +496,15 @@ class FloorGenerator:
                 transition_data[outer_key] = {}
             transition_data[outer_key][inner_key] = value
 
+            # Way back
+            outer_key: str = str(target_tile.layout_id)
+            inner_key: str = f"{target_tile.bounding_box_offset[0]}_{target_tile.bounding_box_offset[1]}_{BACK}"
+            value: list = [tile_at_coord.layout_id, tile_at_coord.bounding_box_offset[0], tile_at_coord.bounding_box_offset[1]]
+
+            if not outer_key in transition_data:
+                transition_data[outer_key] = {}
+            transition_data[outer_key][inner_key] = value
+
         room_data.insert(0, [])
         return transition_data, room_data
     
