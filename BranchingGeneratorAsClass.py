@@ -128,8 +128,8 @@ class FloorGenerator:
             direction = 0
 
         self.generate(self.grid, next_pos, direction, 0)
-        placed_dead_ends = [e for e in self.placed_dead_ends if not e in self.tiles_with_items]
         correct_keys: bool = self.place_remaining_boss_keys()
+        placed_dead_ends = [e for e in self.placed_dead_ends if not e in self.tiles_with_items]
         successful_generation: bool = (len(placed_dead_ends) != 0) and correct_keys
         return successful_generation
 
@@ -291,9 +291,9 @@ class FloorGenerator:
             # Chance to place an item onto the tile. If the tile can't have an item or if it can hold an item but the location is locked
             # or there are no more major items to place, chance will be 0
             can_tile_have_item: bool = layout[key][4]
-            locks_unlocked: bool = set(items_locks) == set(layout[key][5])
-            chance = uniform(0,1) * int(can_tile_have_item) * int(len(self.possible_majors) > 0) * int(locks_unlocked)
-            if chance >= 0.9:
+            locks_unlocked: bool = set(layout[key][5]) <= set(items_locks) # Check if item location locks are a subset of opened locks
+            chance = uniform(0,1) * int(can_tile_have_item) * int(locks_unlocked)
+            if chance >= 0.9 and (len(self.possible_majors) > 0):
                 # Select a random major item to be placed at the tile
                 major = self.possible_majors.pop(randint(0, len(self.possible_majors)-1))
                 self.place_item(major, bounding_box_offset, grid_pos)
