@@ -240,6 +240,19 @@ class FloorGenerator:
 
         return True
 
+    def place_item(self, item_id: int, bounding_box_offset: tuple, grid_pos: tuple) -> None:
+        debug_message: str = f"Placed {ITEM_NAME_MAPPING[item_id]} (ID {item_id}) in Tile {grid_pos}"
+        if (item_id != BOSS_KEY):
+            self.inv.append(item_id)
+            # Consider the item to be collected for the rest of the generation
+            self.possible_lock_states = self.inventory_to_lock_states(self.inv)
+        else:
+            debug_message += f". {self.keys_to_place} Keys remaining."
+        self.tiles_with_items.append(grid_pos)
+        item_key: str = f"{self.layout_id}_{bounding_box_offset[0]}_{bounding_box_offset[1]}"
+        self.item_data[item_key] = item_id
+        print(debug_message)
+
     # Writes the tile data into the grid
     def draw_room(self, draw_begin: tuple, room: dict, open_connections: list):
         layout = room["Layout"]
@@ -277,22 +290,13 @@ class FloorGenerator:
             if chance >= 0.9:
                 # Select a random major item to be placed at the tile
                 major = self.possible_majors.pop(randint(0, len(self.possible_majors)-1))
-                self.inv.append(major)
-                # Consider the item to be collected for the rest of the generation
-                self.possible_lock_states = self.inventory_to_lock_states(self.inv)
-                self.tiles_with_items.append(grid_pos)
-                item_key: str = f"{self.layout_id}_{bounding_box_offset[0]}_{bounding_box_offset[1]}"
-                self.item_data[item_key] = major
+                self.place_item(major, bounding_box_offset, grid_pos)
                 placed_key_item = True
-                print(f"Placed {ITEM_NAME_MAPPING[major]} (ID {major}) in Tile {grid_pos}")
             elif chance >= 0.8 and self.keys_to_place > 0:
-                # Place a boss key
-                item_key: str = f"{self.layout_id}_{bounding_box_offset[0]}_{bounding_box_offset[1]}"
-                self.item_data[item_key] = BOSS_KEY
+                # Place a boss key at the tile
                 self.keys_to_place -= 1
-                self.tiles_with_items.append(grid_pos)
+                self.place_item(BOSS_KEY, bounding_box_offset, grid_pos)
                 placed_key_item = True
-                print(f"Placed {ITEM_NAME_MAPPING[BOSS_KEY]} (ID {BOSS_KEY}) in Tile {grid_pos}. {self.keys_to_place} keys remaining.")
             elif self.keys_to_place > 0 and can_tile_have_item and locks_unlocked:
                 # No item or key was placed
                 tile_info: tuple = (self.layout_id, bounding_box_offset[0], bounding_box_offset[1], grid_pos)
@@ -476,10 +480,9 @@ class FloorGenerator:
         remaining_places = list(self.potential_key_places)
         while self.keys_to_place > 0 and len(remaining_places) > 0:
             item_tile: tuple = remaining_places.pop(randint(0, len(remaining_places)-1))
-            item_key: str = f"{item_tile[0]}_{item_tile[1]}_{item_tile[2]}"
-            self.item_data[item_key] = BOSS_KEY
+            bb_offset: tuple = (item_tile[0], item_tile[1])
             self.keys_to_place -= 1
-            print(f"Placed {ITEM_NAME_MAPPING[BOSS_KEY]} (ID {BOSS_KEY}) in Tile {item_tile[3]}. {self.keys_to_place} keys remaining.")
+            self.place_item(BOSS_KEY, bb_offset, item_tile[3])
         
         return (self.keys_to_place == 0)
             
