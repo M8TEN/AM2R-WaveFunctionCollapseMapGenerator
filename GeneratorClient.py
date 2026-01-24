@@ -12,30 +12,27 @@ seed: int = -1
 
 def generate_package(gen: FloorGenerator, n_boss_keys: int = 0) -> dict:
     full_data: dict = {}
-    try:
-        boss_tile_obj: Tile = gen.grid[gen.boss_tile]
-        print(f"Placed boss room in room with ID {boss_tile_obj.room_id}")
-        if not boss_tile_obj.room_id in [435, 436, 437, 438]:
-            if boss_tile_obj.d == 2: # If tile has door down
-                boss_tile_obj.room_id = 435
-                print("Changed room ID to 435")
-            elif boss_tile_obj.l == 2:
-                boss_tile_obj.room_id = 436
-                print("Changed room ID to 436")
-            elif boss_tile_obj.u == 2:
-                boss_tile_obj.room_id = 437
-                print("Changed room ID to 437")
-            elif boss_tile_obj.r == 2:
-                boss_tile_obj.room_id = 438
-                print("Changed room ID to 438")
-            else:
-                print("Room didn't match expected layout, not replacing room ID")
-    except:
-        print("Error: No dead end for boss placement, not setting boss tile")
-        boss_tile = (-1,-1)
+    boss_tile_obj: Tile = gen.grid[gen.boss_tile]
+    print(f"Placed boss room in room with ID {boss_tile_obj.room_id}")
+    if not boss_tile_obj.room_id in {435, 436, 437, 438}:
+        if boss_tile_obj.d == 2: # If tile has door down
+            boss_tile_obj.room_id = 435
+            print("Changed room ID to 435")
+        elif boss_tile_obj.l == 2:
+            boss_tile_obj.room_id = 436
+            print("Changed room ID to 436")
+        elif boss_tile_obj.u == 2:
+            boss_tile_obj.room_id = 437
+            print("Changed room ID to 437")
+        elif boss_tile_obj.r == 2:
+            boss_tile_obj.room_id = 438
+            print("Changed room ID to 438")
+        else:
+            print("Room didn't match expected layout, not replacing room ID")
     
     transition_data, room_data = gen.get_room_and_transition_data()
     map_init_strings = [gen.width, gen.height]
+    teleporter_coords: list = list(gen.teleporter_transitions.keys()) + list(gen.teleporter_transitions.values())
 
     for coord in gen.grid:
         if gen.grid[coord] != None:
@@ -44,6 +41,9 @@ def generate_package(gen: FloorGenerator, n_boss_keys: int = 0) -> dict:
                 map_string += "1"
             elif coord in gen.tiles_with_items:
                 map_string += "3"
+            elif coord in teleporter_coords:
+                map_string = f"{gen.grid[coord].u}{gen.grid[coord].r}{gen.grid[coord].d}{gen.grid[coord].l}2"
+                map_string += "4"
             elif coord == gen.boss_tile:
                 # Set tile color to purple
                 map_string = f"{gen.grid[coord].u}{gen.grid[coord].r}{gen.grid[coord].d}{gen.grid[coord].l}4"

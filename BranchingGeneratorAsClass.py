@@ -614,6 +614,7 @@ if __name__ == "__main__":
                 map_string += "3"
             elif position in tiles_with_teleporters:
                 new_tile["color"] = 1
+                map_string = f"{grid[position].u}{grid[position].r}{grid[position].d}{grid[position].l}2"
                 map_string += "0"
             elif position == boss_tile:
                 new_tile["special"] = 4
