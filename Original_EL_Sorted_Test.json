@@ -2966,7 +2966,7 @@
 			"Scaling": 0.0,
 			"Scaling Max": -1,
 			"Scaling Min": 4,
-			"Weight": 2.0
+			"Weight": 1.5
 		},
 		{
 			"BoundingBox": [
@@ -3137,7 +3137,7 @@
 			"Scaling": 0.0,
 			"Scaling Max": -1,
 			"Scaling Min": 4,
-			"Weight": 0.0
+			"Weight": 2.0
 		},
 		{
 			"BoundingBox": [
@@ -3273,6 +3273,126 @@
 			"Scaling Max": -1,
 			"Scaling Min": 4,
 			"Weight": 2.0
+		},
+		{
+			"BoundingBox": [
+				0,
+				0,
+				2,
+				0
+			],
+			"DoorTiles": [
+				[
+					"2,0"
+				],
+				[
+					"0,0"
+				],
+				[
+					"0,0"
+				],
+				[
+					"2,0"
+				]
+			],
+			"IsDeadEnd": false,
+			"Layout": {
+				"0,0": [
+					0,
+					2,
+					2,
+					1,
+					true,
+					[
+						1
+					]
+				],
+				"1,0": [
+					0,
+					1,
+					0,
+					1,
+					false,
+					[]
+				],
+				"2,0": [
+					2,
+					1,
+					0,
+					2,
+					true,
+					[
+						1
+					]
+				]
+			},
+			"Lock": [],
+			"RoomID": 459,
+			"Scaling": 0.0,
+			"Scaling Max": -1,
+			"Scaling Min": 4,
+			"Weight": 1.5
+		},
+		{
+			"BoundingBox": [
+				0,
+				0,
+				1,
+				1
+			],
+			"DoorTiles": [
+				[
+					"1,0"
+				],
+				[
+					"0,0"
+				],
+				[
+					"0,1"
+				],
+				[]
+			],
+			"IsDeadEnd": false,
+			"Layout": {
+				"0,0": [
+					0,
+					2,
+					1,
+					0,
+					true,
+					[]
+				],
+				"0,1": [
+					0,
+					0,
+					2,
+					1,
+					false,
+					[]
+				],
+				"1,0": [
+					2,
+					1,
+					0,
+					0,
+					false,
+					[]
+				],
+				"1,1": [
+					1,
+					0,
+					0,
+					1,
+					false,
+					[]
+				]
+			},
+			"Lock": [],
+			"RoomID": 460,
+			"Scaling": 0.0,
+			"Scaling Max": -1,
+			"Scaling Min": 4,
+			"Weight": 2.0
 		}
 	],
 	"DownDoorRooms": [
@@ -3293,7 +3413,8 @@
 		56,
 		57,
 		58,
-		59
+		59,
+		60
 	],
 	"LeftDoorRooms": [
 		0,
@@ -3340,7 +3461,9 @@
 		56,
 		57,
 		58,
-		59
+		59,
+		60,
+		61
 	],
 	"RightDoorRooms": [
 		0,
@@ -3388,7 +3511,9 @@
 		56,
 		57,
 		58,
-		59
+		59,
+		60,
+		61
 	],
 	"UpDoorRooms": [
 		0,
@@ -3408,6 +3533,8 @@
 		56,
 		57,
 		58,
-		59
+		59,
+		60,
+		61
 	]
 }
