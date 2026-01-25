@@ -163,3 +163,5 @@ GroupedOutput.json
 AM2RMapperWindows.exe
 BranchingOutput.json
 500x500_BranchingOutput.json
+Debugging/*.json
+Debugging/*.json
