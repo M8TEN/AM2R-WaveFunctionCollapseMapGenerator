@@ -9,6 +9,7 @@ from copy import deepcopy
 PORT: int = 64196
 exit: bool = False
 seed: int = -1
+preset_seed: bool = False
 
 def generate_package(gen: FloorGenerator, n_boss_keys: int = 0) -> dict:
     full_data: dict = {}
@@ -92,7 +93,8 @@ async def main():
                 while i < len(command)-2:
                     start_inventory.append(merge_bytes_to_int(command[i+1], command[i]))
                     i += 2
-                if seed != -1:
+                if not preset_seed:
+                    seed = random.randint(0, sys.maxsize)
                     random.seed(seed)
                     print(f"Generating with seed {seed}")
                 print(f"Start Inventory = {start_inventory}")
@@ -118,6 +120,7 @@ async def main():
 
 try:
     seed = int(sys.argv[1])
+    preset_seed = True
 except ValueError:
     print(f"Could not convert '{sys.argv[1]}' to integer, using random seed")
     seed = random.randint(0, sys.maxsize)
