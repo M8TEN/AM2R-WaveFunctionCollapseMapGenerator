@@ -366,7 +366,7 @@ class FloorGenerator:
                 
                 ends = [e for e in ends if len(valid_connections[ends.index(e)]) > 0]
                 valid_connections = [c for c in valid_connections if len(c) > 0]
-                end_to_place_idx = randint(0, len(ends)-1)
+                end_to_place_idx = randint(0, len(ends)-1) if len(ends) >= 1 else 0
                 end_chosen = ends[end_to_place_idx]
                 end_offset_str = valid_connections[end_to_place_idx][randint(0, len(valid_connections[end_to_place_idx])-1)]
                 end_offset = tuple(map(int, end_offset_str.split(",")))
@@ -392,7 +392,7 @@ class FloorGenerator:
                 self.draw_room(draw_begin, room_chosen, new_connections)
 
                 # If the setting UNIQUE_ROOMS is on, prevent the room from ever being placed again in this generation
-                if UNIQUE_ROOMS:
+                if UNIQUE_ROOMS and not room_chosen in self.dead_ends:
                     room_chosen["Scaling"] = 0
                     room_chosen["Weight"] = 0
                 
