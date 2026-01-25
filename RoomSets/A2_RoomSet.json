@@ -3393,6 +3393,54 @@
 			"Scaling Max": -1,
 			"Scaling Min": 4,
 			"Weight": 2.0
+		},
+		{
+			"BoundingBox": [
+				0,
+				0,
+				0,
+				1
+			],
+			"DoorTiles": [
+				[],
+				[
+					"0,0"
+				],
+				[],
+				[
+					"0,1"
+				]
+			],
+			"IsDeadEnd": false,
+			"Layout": {
+				"0,0": [
+					1,
+					2,
+					1,
+					0,
+					true,
+					[
+						9,
+						5
+					]
+				],
+				"0,1": [
+					1,
+					0,
+					1,
+					2,
+					true,
+					[
+						1
+					]
+				]
+			},
+			"Lock": [],
+			"RoomID": 461,
+			"Scaling": 0.0,
+			"Scaling Max": -1,
+			"Scaling Min": 4,
+			"Weight": 1.7
 		}
 	],
 	"DownDoorRooms": [
@@ -3414,7 +3462,8 @@
 		57,
 		58,
 		59,
-		60
+		60,
+		62
 	],
 	"LeftDoorRooms": [
 		0,
@@ -3535,6 +3584,7 @@
 		58,
 		59,
 		60,
-		61
+		61,
+		62
 	]
 }
