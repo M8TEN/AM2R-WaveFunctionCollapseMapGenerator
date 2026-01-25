@@ -562,7 +562,7 @@ if __name__ == "__main__":
     while not success:
         frames = 0
         max_recursion_depth_reached = 0
-        generator = FloorGenerator(WIDTH, HEIGHT, "A2_RoomSet.json", [])
+        generator = FloorGenerator(WIDTH, HEIGHT, "RoomSets/A2_RoomSet.json", [])
         try:
             success = generator.generate_floor(KEYS_TO_PLACE)
         except KeyboardInterrupt:

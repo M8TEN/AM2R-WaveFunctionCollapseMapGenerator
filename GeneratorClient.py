@@ -99,7 +99,7 @@ async def main():
                 success: bool = False
                 generator: FloorGenerator = None
                 while not success:
-                    generator = FloorGenerator(floor_width, floor_height, "A2_RoomSet.json", deepcopy(start_inventory))
+                    generator = FloorGenerator(floor_width, floor_height, "RoomSets/A2_RoomSet.json", deepcopy(start_inventory))
                     success = generator.generate_floor(number_of_keys)
                     if not success: print("Floor generation failed, trying again..\n\n")
                 package: dict = generate_package(generator, number_of_keys)
