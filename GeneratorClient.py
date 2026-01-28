@@ -44,7 +44,7 @@ def generate_package(gen: FloorGenerator, n_boss_keys: int = 0) -> dict:
                 map_string += "3"
             elif coord in teleporter_coords:
                 map_string = f"{gen.grid[coord].u}{gen.grid[coord].r}{gen.grid[coord].d}{gen.grid[coord].l}2"
-                map_string += "4"
+                map_string += "7"
             elif coord == gen.boss_tile:
                 # Set tile color to purple
                 map_string = f"{gen.grid[coord].u}{gen.grid[coord].r}{gen.grid[coord].d}{gen.grid[coord].l}4"

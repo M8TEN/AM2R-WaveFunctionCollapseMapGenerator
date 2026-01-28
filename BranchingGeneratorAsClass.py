@@ -2,7 +2,7 @@ import json
 import time
 import traceback
 from copy import deepcopy
-from random import randint, uniform, seed
+from random import randint, uniform, seed, shuffle
 import sys
 
 frames = 0
@@ -306,11 +306,11 @@ class FloorGenerator:
                 major = self.possible_majors.pop(randint(0, len(self.possible_majors)-1))
                 self.place_item(major, self.layout_id, bounding_box_offset, grid_pos)
                 placed_key_item = True
-            elif chance >= 0.8 and self.keys_to_place > 0:
-                # Place a boss key at the tile
-                self.keys_to_place -= 1
-                self.place_item(BOSS_KEY, self.layout_id, bounding_box_offset, grid_pos)
-                placed_key_item = True
+            # elif chance >= 0.8 and self.keys_to_place > 0:
+            #     # Place a boss key at the tile
+            #     self.keys_to_place -= 1
+            #     self.place_item(BOSS_KEY, self.layout_id, bounding_box_offset, grid_pos)
+            #     placed_key_item = True
             elif self.keys_to_place > 0 and can_tile_have_item and locks_unlocked:
                 # No item or key was placed
                 tile_info: tuple = (self.layout_id, bounding_box_offset[0], bounding_box_offset[1], grid_pos)
@@ -510,15 +510,15 @@ class FloorGenerator:
     
     def place_remaining_boss_keys(self) -> bool:
         if self.keys_to_place == 0: return True # Already placed all keys
-        print("Not enough keys placed, placing remaining keys..", end="\n\n")
         remaining_places = list(self.potential_key_places)
+        shuffle(remaining_places)
         while self.keys_to_place > 0 and len(remaining_places) > 0:
-            item_tile: tuple = remaining_places.pop(randint(0, len(remaining_places)-1))
+            item_tile: tuple = remaining_places.pop(0)
             bb_offset: tuple = (item_tile[1], item_tile[2])
             self.keys_to_place -= 1
             self.place_item(BOSS_KEY, item_tile[0], bb_offset, item_tile[3])
         
-        return (self.keys_to_place == 0)
+        return (self.keys_to_place <= 0)
     
     def place_dead_end_teleporters(self, dead_ends: list) -> None:
         TELEPORT_CHANCE: float = 0.50
@@ -614,8 +614,9 @@ if __name__ == "__main__":
                 map_string += "3"
             elif position in tiles_with_teleporters:
                 new_tile["color"] = 1
+                new_tile["special"] = 7
                 map_string = f"{grid[position].u}{grid[position].r}{grid[position].d}{grid[position].l}2"
-                map_string += "0"
+                map_string += "7"
             elif position == boss_tile:
                 new_tile["special"] = 4
                 # Set tile color to purple
