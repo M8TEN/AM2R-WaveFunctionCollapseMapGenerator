@@ -14,11 +14,16 @@ for file_name in os.listdir("RoomSets"):
         room_set = json.load(file)
     
     for room in room_set["AllRooms"]:
-        if len(room["Lock"]) == 0: continue
-        room["Lock"] = [convert_locks_to_int(room["Lock"])]
+        if room["RoomID"] == 420:
+            pass
+        if len(room["Lock"]) != 0: 
+            room["Lock"] = [convert_locks_to_int(room["Lock"])]
+        
         for key in room["Layout"]:
             if len(room["Layout"][key][5]) == 0: continue
             room["Layout"][key][5] = [convert_locks_to_int(room["Layout"][key][5])]
 
     with open(full_path, "w") as out_file:
         json.dump(room_set, out_file, indent=2)
+    
+    print(f"Wrote to file {full_path}")
