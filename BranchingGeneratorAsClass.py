@@ -8,6 +8,27 @@ import sys
 frames = 0
 max_recursion_depth_reached = 0
 
+# Lock bit positions
+BOMB_LOCK: int =                                 0b1
+MISSILE_LOCK: int =                             0b10
+SUPER_MISSILE_LOCK: int =                      0b100
+SPEED_LOCK: int =                             0b1000
+BALLSPARK_LOCK: int =                        0b10000
+SCREW_LOCK: int =                           0b100000
+POWER_BOMB_LOCK: int =                     0b1000000
+CRUMBLE_BLOCK_LOCK: int =                 0b10000000
+CRUMBLE_TUNNEL_LOCK: int =               0b100000000
+HIJUMP_WALL_LOCK: int =                 0b1000000000
+HIJUMP_PLATFORM_LOCK: int =            0b10000000000
+AIRJUMP_LOCK: int =                   0b100000000000
+GRAVITY_HAZARD_LOCK: int =           0b1000000000000
+VARIA_HAZARD_LOCK: int =            0b10000000000000
+MOVE_EMP_BALL_LOCK: int =          0b100000000000000
+MOVE_EMP_BALL_WALL_LOCK: int =    0b1000000000000000
+MEBOID_BARRIER_LOCK: int =       0b10000000000000000
+MULTIPLAYER_LOCK_2P: int =      0b100000000000000000
+MULTIPLAYER_LOCK: int =        0b1000000000000000000
+
 UNIQUE_ROOMS = False
 START = (3,3) # Coordinate of the top-left corner in the output space
 BOSS_KEY: int = 1000
@@ -68,7 +89,7 @@ class FloorGenerator:
         self.inv: list = start_inventory
         self.possible_majors: list = [m for m in ITEM_NAME_MAPPING.keys() if not m in self.inv and m != BOSS_KEY]
         self.tiles_with_items: list = []
-        self.possible_lock_states: list = self.inventory_to_lock_states(self.inv)
+        self.possible_lock_states: int = self.inventory_to_lock_states(self.inv)
         self.start_pos: tuple = (0,0)
         self.layout_id: int = 1
         self.transition_data: dict = {}
@@ -180,11 +201,7 @@ class FloorGenerator:
         while idx < len(possible_rooms):
             room = possible_rooms[idx]
             # Check if the player needs specific items to traverse the room
-            is_locked = False
-            for lock in room["Lock"]:
-                if not lock in self.possible_lock_states:
-                    is_locked = True
-                    break
+            is_locked = not self.is_location_open(room["Lock"])
             # Remove room from possibilities if it does not have a door in the correct direction or if it is locked behind an item
             if is_locked:
                 del possible_rooms[idx]
@@ -193,6 +210,7 @@ class FloorGenerator:
                 idx += 1
         
         return possible_rooms
+
 
     # Returns a list of local coordinate keys with tiles that have doors in the given door direction
     def start_positions(self, layout: dict, door_dir: int) -> list:
@@ -294,12 +312,10 @@ class FloorGenerator:
                 self.placed_doors.append((grid_pos, DOWN))
                 if not self.grid[(grid_pos[0], grid_pos[1] + 1)]:
                     open_connections.append([(grid_pos[0], grid_pos[1] + 1), UP])
-            # Get the item locks that lock an item location at a tile in the room
-            items_locks = [l for l in self.possible_lock_states if l in layout[key][5]]
             # Chance to place an item onto the tile. If the tile can't have an item or if it can hold an item but the location is locked
             # or there are no more major items to place, chance will be 0
             can_tile_have_item: bool = layout[key][4]
-            locks_unlocked: bool = set(layout[key][5]) <= set(items_locks) # Check if item location locks are a subset of opened locks
+            locks_unlocked: bool = self.is_location_open(layout[key][5]) # Check if item location locks are a subset of opened locks
             chance = uniform(0,1) * int(can_tile_have_item) * int(locks_unlocked)
             if chance >= 0.9 and (len(self.possible_majors) > 0):
                 # Select a random major item to be placed at the tile
@@ -423,48 +439,52 @@ class FloorGenerator:
         return room["Weight"] + room["Scaling"] * scale_amount
 
     # Returns list of item lock states that are unlocked by item_id
-    def unlocked_states(self, item_id: int, inventory: list) -> list:
+    def unlocked_states(self, item_id: int, inventory: list) -> int:
         match item_id:
             case 450: #Bombs
-                return [0,9,10,14]
+                return (BOMB_LOCK | MOVE_EMP_BALL_LOCK)
             case 452: #Spider ball
-                return [7,8,9]
+                return (CRUMBLE_BLOCK_LOCK | CRUMBLE_TUNNEL_LOCK | HIJUMP_WALL_LOCK)
             case 453: #Spring ball
                 if 457 in inventory: # If speedbooster in inventory
-                    return [4]
+                    return BALLSPARK_LOCK
                 else:
-                    return []
+                    return 0
             case 454: #Hi-Jump
-                return [9,10]
+                return (HIJUMP_WALL_LOCK | HIJUMP_PLATFORM_LOCK)
             case 455: #Varia
-                return [13]
+                return VARIA_HAZARD_LOCK
             case 456: #Space Jump
-                return [7,9,10,11]
+                return (HIJUMP_WALL_LOCK | HIJUMP_PLATFORM_LOCK | AIRJUMP_LOCK)
             case 457: #Speedbooster
-                return [3]
+                return SPEED_LOCK
             case 458: #Screw Attack
-                return [5]
+                return SCREW_LOCK
             case 459: #Gravity
-                return [12]
+                return GRAVITY_HAZARD_LOCK
             case 461: #Ice Beam
-                return [16]
+                return MEBOID_BARRIER_LOCK
             case 925: #Missile Tank
-                return [1,14,15]
+                return (MISSILE_LOCK | MOVE_EMP_BALL_LOCK | MOVE_EMP_BALL_WALL_LOCK)
             case 926: #Super Missile Tank
-                return [1,2,14,15]
+                return (MISSILE_LOCK | SUPER_MISSILE_LOCK | MOVE_EMP_BALL_LOCK | MOVE_EMP_BALL_WALL_LOCK)
             case 927: #Power Bomb Tank
-                return [0,6]
+                return (BOMB_LOCK | POWER_BOMB_LOCK)
             case _:
-                return []
+                return 0
 
     # Maps an inventory loadout to possible room lock states        
-    def inventory_to_lock_states(self, inventory: list) -> list:
-        states = []
+    def inventory_to_lock_states(self, inventory: list) -> int:
+        states = 0
         for unlocked_item_id in inventory:
-            states += self.unlocked_states(unlocked_item_id, inventory)
+            states |= self.unlocked_states(unlocked_item_id, inventory)
         
-        return list(set(states))
+        return states
     
+    def is_location_open(self, locks: list) -> bool:
+        if len(locks) == 0: return True
+        return any(((self.possible_lock_states & lock) == lock) for lock in locks)
+
     def get_room_and_transition_data(self) -> dict:
         transition_data = {}
         room_data = []
