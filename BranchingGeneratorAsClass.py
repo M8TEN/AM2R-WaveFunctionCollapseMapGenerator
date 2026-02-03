@@ -164,21 +164,11 @@ class FloorGenerator:
 
 # Returns a dict where coordinate tuples are the key and None is the value
     def create_grid(self, w: int, h: int) -> dict:
-        grid = {}
-        for y in range(h):
-            for x in range(w):
-                grid[(x,y)] = None
-        
-        return grid
+        return {(x,y): None for y in range(h) for x in range(w)}
 
     # Returns a list of all rooms with only 1 door
     def get_dead_ends(self, data: list) -> list:
-        dead_ends = []
-        for room in data:
-            if room["IsDeadEnd"]:
-                dead_ends.append(room)
-        
-        return dead_ends
+        return [r for r in data if r["IsDeadEnd"]]
 
     # Returns true if the room has a door that points in the direction of door_dir. door_dir is an index into the layout tile's data
     def has_door(self, door_tiles_arr: list, door_dir: int) -> bool:
@@ -214,11 +204,7 @@ class FloorGenerator:
 
     # Returns a list of local coordinate keys with tiles that have doors in the given door direction
     def start_positions(self, layout: dict, door_dir: int) -> list:
-        positions = []
-        for key in layout:
-            if layout[key][door_dir] == DOOR:
-                positions.append(key)
-        return positions
+        return [k for k in layout if layout[k][door_dir] == DOOR]
 
     # Bounding box is [origin_x, origin_y, size_x, size_y]
     def is_bounding_box_inside(self, origin_x: int, origin_y: int, size_x: int, size_y: int) -> bool:
